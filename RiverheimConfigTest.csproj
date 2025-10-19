@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform>AnyCPU</Platform>
+    <ProjectGuid>{F4A6B8B4-4B39-4A63-9E57-3C1C098A8F6B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RiverheimConfigTest</RootNamespace>
+    <AssemblyName>RiverheimConfigTest</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <!-- Change this if your Valheim install is elsewhere -->
+    <ValheimDir Condition=" '$(ValheimDir)' == '' ">F:\SteamLibrary\steamapps\common\Valheim</ValheimDir>
+    <BepInExCoreDir>$(ValheimDir)\BepInEx\core</BepInExCoreDir>
+    <UnityManagedDir>$(ValheimDir)\valheim_Data\Managed</UnityManagedDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="RiverheimConfigTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="ServerSync">
+      <HintPath>ServerSync.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
+  </ItemGroup>
+
+  <!-- BepInEx references -->
+  <ItemGroup Condition="Exists('$(BepInExCoreDir)\BepInEx.dll')">
+    <Reference Include="BepInEx">
+      <HintPath>$(BepInExCoreDir)\BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="Exists('$(BepInExCoreDir)\BepInEx.Configuration.dll')">
+    <Reference Include="BepInEx.Configuration">
+      <HintPath>$(BepInExCoreDir)\BepInEx.Configuration.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Harmony reference: prefer 0Harmony, fallback to HarmonyLib -->
+  <Choose>
+    <When Condition="Exists('$(BepInExCoreDir)\0Harmony.dll')">
+      <ItemGroup>
+        <Reference Include="0Harmony">
+          <HintPath>$(BepInExCoreDir)\0Harmony.dll</HintPath>
+          <Private>false</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup Condition="Exists('$(BepInExCoreDir)\HarmonyLib.dll')">
+        <Reference Include="HarmonyLib">
+          <HintPath>$(BepInExCoreDir)\HarmonyLib.dll</HintPath>
+          <Private>false</Private>
+        </Reference>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+
+  <!-- UnityEngine references: legacy and CoreModule split -->
+  <ItemGroup Condition="Exists('$(UnityManagedDir)\UnityEngine.dll')">
+    <Reference Include="UnityEngine">
+      <HintPath>$(UnityManagedDir)\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="Exists('$(UnityManagedDir)\UnityEngine.CoreModule.dll')">
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(UnityManagedDir)\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Valheim game assembly (not strictly needed here, but harmless) -->
+  <ItemGroup Condition="Exists('$(UnityManagedDir)\assembly_valheim.dll')">
+    <Reference Include="assembly_valheim">
+      <HintPath>$(UnityManagedDir)\assembly_valheim.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

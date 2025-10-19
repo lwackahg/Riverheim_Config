@@ -1,0 +1,17 @@
+ICON REQUIRED: icon.png
+
+You need to create a 256x256 PNG image named "icon.png" in this directory.
+
+Suggestions for the icon:
+- Use a river/water theme
+- Include Riverheim branding if desired
+- Keep it simple and recognizable at small sizes
+- Use blue/cyan colors for water theme
+
+Tools to create icon:
+- GIMP (free): https://www.gimp.org/
+- Paint.NET (free): https://www.getpaint.net/
+- Photoshop
+- Online tools: https://www.canva.com/
+
+Once created, delete this file and ensure icon.png is 256x256 pixels.
