@@ -1,7 +1,7 @@
 {
     "name": "Riverheim_Config",
     "version_number": "1.0.2",
-    "website_url": "",
+    "website_url": "https://github.com/lwackahg/Riverheim_Config",
     "description": "Server-enforced configuration for Riverheim Rivers & Lakes mod. Allows customization of river density, size, lakes, and world generation parameters with automatic client synchronization.",
     "dependencies": [
         "denikson-BepInExPack_Valheim-5.4.2202",
