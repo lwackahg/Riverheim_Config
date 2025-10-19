@@ -2,7 +2,11 @@
 # Run this script to create the package zip file
 
 $packageName = "Riverheim_Config"
-$version = "1.0.2"
+# Read version from manifest to avoid manual sync
+$manifestPath = Join-Path "ThunderstorePackage" "manifest.json"
+if (-not (Test-Path $manifestPath)) { throw "Missing manifest.json at $manifestPath" }
+$manifest = Get-Content -Raw -Path $manifestPath | ConvertFrom-Json
+$version = $manifest.version_number
 $outputZip = "$packageName-$version.zip"
 $packageDir = "ThunderstorePackage"
 $sourceDir = "SourceCode"
