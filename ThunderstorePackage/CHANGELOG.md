@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.3] - 2025-10-18
+
+### Changed
+- Packaging script now reads version from `manifest.json` (single source of truth).
+- Package zips now output to `Releases/` folder for cleaner repo organization.
+- Added `.gitignore` to exclude build artifacts, releases, and temp files.
+- Expanded repo README with install/troubleshooting/support/roadmap sections.
+
+### Notes
+- No gameplay or config behavior changes.
+
 ## [1.0.2] - 2025-10-18
 
 ### Changed

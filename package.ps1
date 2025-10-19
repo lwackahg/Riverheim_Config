@@ -7,9 +7,15 @@ $manifestPath = Join-Path "ThunderstorePackage" "manifest.json"
 if (-not (Test-Path $manifestPath)) { throw "Missing manifest.json at $manifestPath" }
 $manifest = Get-Content -Raw -Path $manifestPath | ConvertFrom-Json
 $version = $manifest.version_number
-$outputZip = "$packageName-$version.zip"
+$releasesDir = "Releases"
+$outputZip = Join-Path $releasesDir "$packageName-$version.zip"
 $packageDir = "ThunderstorePackage"
 $sourceDir = "SourceCode"
+
+# Ensure Releases folder exists
+if (-not (Test-Path $releasesDir)) {
+    New-Item -ItemType Directory -Path $releasesDir | Out-Null
+}
 
 Write-Host "Building Thunderstore package: $outputZip" -ForegroundColor Cyan
 
