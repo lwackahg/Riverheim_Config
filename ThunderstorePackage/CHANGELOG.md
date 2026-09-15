@@ -9,6 +9,9 @@
 - Rebuilt the configuration around actual Riverheim 1.1 fields: world, river origins/width/pruning/meanders, lake budget/affinity, and biome placement biases.
 - Removed obsolete 0.12-only settings rather than allowing a config file to report success while silently doing nothing.
 - Added explicit startup and field-layout failures to prevent false "all patches applied" reporting.
+- Every default now matches Riverheim 1.1 exactly, so an untouched config generates stock Riverheim worlds (river `WidthOffset` -6, `MinWidth` 14.5, `MaxWidthDifference` 2.2).
+- Split the single ocean setting into `SeaFloorDepth` (default -40, the world edge and trench floor) and `OceanBiomeDepth` (default -20, how deep water must be to count as Ocean). The old `OceanDepth` set both.
+- Added `StartingAreaRadius`, a `5. Biome Amounts` section (how much contested land each biome takes) and a `6. Biome Bands` section (where Swamp, Plains and Mistlands appear and how far Meadows reaches, as percent of the way from spawn to the world edge).
 
 ### Migration
 

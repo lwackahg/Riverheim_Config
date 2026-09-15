@@ -6,13 +6,18 @@ Riverheim 1.1 replaced the old `DefaultConfig` API with its `ConfigManager` gene
 
 ## Controls
 
-- World radius, tile spacing, ocean threshold, and mountain threshold
-- River origin density and land-neighbour requirement
-- River width, pruning, and meander settings
-- Lake budget and terrain-affinity settings
-- Competitive-placement biases for Meadows, Forest (Black Forest), Swamp, Plains, and Mistlands
+Every default is Riverheim 1.1's own value, so an untouched config generates stock Riverheim worlds.
+
+- **World**: world radius, tile spacing, sea floor depth, ocean biome depth, mountain height, starting area radius
+- **Rivers**: origin density and land-neighbour requirement, width formula, pruning, meanders
+- **Lakes**: budget and terrain-affinity settings
+- **Biomes**: placement bias for Meadows, Black Forest, Swamp, Plains and Mistlands
+- **Biome Amounts**: how much contested land each of those biomes takes
+- **Biome Bands**: how far from spawn Meadows fades out, where Swamp and Plains start and end, and where Mistlands starts (percent of the way to the world edge)
 
 Every setting is enforced and synchronized by the server through ServerSync.
+
+**Bigger or smaller worlds:** keep `WorldRadius` at 10500 and use Expand World Size stretching (Stretch world = Stretch biomes, and EWS World radius + World edge size = 10500 × stretch). Changing `WorldRadius` scales the biome bands but not the poles, the landmass swirl or the rainfall pattern, so it distorts the layout.
 
 ## Installation
 
@@ -26,7 +31,7 @@ Every setting is enforced and synchronized by the server through ServerSync.
 - Riverheim terrain generation must match between server and clients. Keep Riverheim and this mod at identical versions across the group.
 - Changes apply whenever Riverheim generates terrain. Treat a configuration change as a new-world decision; do not change it for an established world without a tested backup.
 - The 1.x config file is not migrated. Version 2 creates new, accurately named sections and leaves legacy entries harmlessly unused.
-- This mod intentionally exposes only settings that map to real Riverheim 1.1 configuration fields. Removed 0.12-era controls, such as river valleys and the old per-biome distance curves, are not advertised as working.
+- This mod intentionally exposes only settings that map to real Riverheim 1.1 configuration fields. Removed 0.12-era controls, such as river valleys, are not advertised as working; the biome bands are the 1.1 equivalent of the old per-biome travel distances.
 
 ## Troubleshooting
 

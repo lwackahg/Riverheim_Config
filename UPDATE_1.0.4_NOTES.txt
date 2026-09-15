@@ -1,0 +1,72 @@
+================================================================================
+  RIVERHEIM CONFIG v1.0.4 - UPDATE NOTES
+================================================================================
+
+WHAT'S NEW
+----------
+✅ ALL 5 MAJOR BIOMES NOW CONFIGURABLE
+✅ OCEAN DEPTH CONTROL (Archipelago vs Pangaea worlds)
+✅ MOUNTAIN HEIGHT CONTROL
+✅ "RIVERS END AT SWAMPS" FEATURE IMPLEMENTED
+✅ 60+ TOTAL CONFIGURABLE PARAMETERS
+
+FILES UPDATED
+-------------
+✓ RiverheimConfigTest.cs - Version 1.0.4, added all biome configs
+✓ README.md - Updated with new features and examples
+✓ CHANGELOG.md - Complete 1.0.4 changelog
+✓ com.valheim.riverheim.config.cfg - Template with all new parameters
+
+RECOMMENDED CONFIG (Fix Underrepresented Swamps)
+-------------------------------------------------
+[9. Biomes - Swamp]
+FixedBias = -2
+RiverBonus_AtRiver = 25
+RiverBonus_Near140m = 15
+RiverBonus_EndDistance = 300
+CoastalPenalty = -40
+CoastalPenalty_EndDistance = 200
+TravelDistance_Start = 800
+TravelDistance_Peak = 1500
+TravelDistance_End = 8000
+
+[9. Biomes - Plains]
+FixedBias = 0
+
+NEXT STEPS
+----------
+1. Build the mod:
+   dotnet msbuild RiverheimConfigTest.csproj /t:Rebuild /p:Configuration=Release
+
+2. Test locally:
+   - Copy DLL to BepInEx/plugins/
+   - Edit config with recommended values
+   - Create NEW world
+   - Verify swamps near rivers
+
+3. Package for release:
+   .\package.ps1
+
+4. Upload to Thunderstore as version 1.0.4
+
+KEY FEATURES
+------------
+• Meadows: FixedBias, RiverBonus toggle
+• Black Forest: FixedBias
+• Swamp: 9 parameters (full control)
+• Plains: FixedBias, travel distances
+• Mistlands: FixedBias, travel distances
+• Ocean: OceanDepth (-40 to -5)
+• Mountains: MountainHeight (30 to 55)
+
+TESTING CHECKLIST
+-----------------
+[ ] Mod compiles without errors
+[ ] Config file generates correctly
+[ ] Swamps appear near rivers
+[ ] Ocean depth changes work
+[ ] All biomes configurable
+[ ] Server sync works
+[ ] Logs show applied values
+
+================================================================================
