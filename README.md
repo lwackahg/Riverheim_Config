@@ -1,38 +1,38 @@
 # Riverheim Config
 
-> WARNING: BETA — HIGH RISK. BACK UP YOUR WORLDS AND SAVES.
-> - Experimental build. Functionality is not guaranteed.
-> - May cause unintended consequences, including corrupted worlds or saves.
-> - Back up existing worlds and characters before installing or changing settings.
-> - Recommended: Test on a fresh world first. Do not use on critical servers without backups.
-> - Use at your own risk. Report findings on the Riverheim Discord.
+Server-synchronized world-generation controls for **Gurebu-Riverheim 1.1.x**.
 
-Server-enforced configuration for the [Riverheim Rivers & Lakes](https://thunderstore.io/c/valheim/p/Riverheim_Dev/Riverheim/) mod. Allows server admins to control river and lake generation with automatic client synchronization.
+Riverheim 1.1 replaced the old `DefaultConfig` API with its `ConfigManager` generation pipeline. This release applies settings at that pipeline entry point, immediately before a world is generated. It is a breaking rewrite of Riverheim Config 1.x and is not compatible with Riverheim 0.12.
 
-## Features
+## Controls
 
-- Server-enforced config using ServerSync
-- 26+ parameters across spawning, size, filtering, appearance, valleys, lakes, world size
-- Harmony patches to override Riverheim defaults
-- Version sync and descriptive logging
+- World radius, tile spacing, ocean threshold, and mountain threshold
+- River origin density and land-neighbour requirement
+- River width, pruning, and meander settings
+- Lake budget and terrain-affinity settings
+- Competitive-placement biases for Meadows, Forest (Black Forest), Swamp, Plains, and Mistlands
 
-## Installation (Thunderstore)
+Every setting is enforced and synchronized by the server through ServerSync.
 
-- Install BepInExPack for Valheim
-- Install Riverheim "Rivers & Lakes"
-- Install this mod from Thunderstore (DLL is placed under `BepInEx/plugins/` in the package)
+## Installation
 
-## Configuration
+1. Install `denikson-BepInExPack_Valheim` 5.4.2202 or newer.
+2. Install `Gurebu-Riverheim` 1.1.x on the server and every client.
+3. Install this mod on the server and every client.
+4. Start once to create `BepInEx/config/com.valheim.riverheim.config.cfg`, then edit that file on the server.
 
-Edit: `BepInEx/config/com.valheim.riverheim.config.cfg`
+## Important
 
-When joining a server, server values override client values in memory (client file remains on disk).
+- Riverheim terrain generation must match between server and clients. Keep Riverheim and this mod at identical versions across the group.
+- Changes apply whenever Riverheim generates terrain. Treat a configuration change as a new-world decision; do not change it for an established world without a tested backup.
+- The 1.x config file is not migrated. Version 2 creates new, accurately named sections and leaves legacy entries harmlessly unused.
+- This mod intentionally exposes only settings that map to real Riverheim 1.1 configuration fields. Removed 0.12-era controls, such as river valleys and the old per-biome distance curves, are not advertised as working.
 
-## Important Notes
+## Troubleshooting
 
-- Create a NEW world after changing config values
-- Extreme values may cause performance issues or crashes
-- Use at your own risk; back up worlds/saves
+- Check `BepInEx/LogOutput.log` for `Riverheim 1.1 configuration patch applied` and `Applied Riverheim config`.
+- If the log says `ConfigManager.GetConfig was not found`, Riverheim 1.1.x is not installed or an incompatible build is loaded.
+- If it lists settings that were not applied, do not generate a production world; the upstream configuration layout has changed and this companion needs an update.
 
 ## Build
 
@@ -40,70 +40,4 @@ When joining a server, server values override client values in memory (client fi
 dotnet msbuild RiverheimConfigTest.csproj /t:Rebuild /p:Configuration=Release
 ```
 
-Output: `bin/Release/RiverheimConfigTest.dll`
-
-## Packaging
-
-Run:
-```powershell
-.\package.ps1
-```
-This produces `Riverheim_Config-<version>.zip` with `BepInEx/plugins/RiverheimConfigTest.dll` inside.
-
-## Quick Start
-
-1. Install BepInEx and Riverheim "Rivers & Lakes".
-2. Install this mod from Thunderstore or manually copy the DLL to `BepInEx/plugins/`.
-3. Edit `BepInEx/config/com.valheim.riverheim.config.cfg` on the server.
-4. Start a NEW world to test changes.
-
-## Install via Mod Manager
-
-- Use the Thunderstore page Install button or protocol:
-
-```
-thunderstore://install/valheim/Wackah/Riverheim_Config/1.0.2
-```
-
-## Manual Install
-
-1. Download the Thunderstore zip.
-2. Extract the `BepInEx/` folder into your Valheim directory, merging folders.
-3. Verify `BepInEx/plugins/RiverheimConfigTest.dll` exists.
-
-## Troubleshooting
-
-- **Two config files appear**: Ensure only this mod (GUID `com.valheim.riverheim.config`) is installed; remove any old DLLs using `com.valheim.riverheim.rivers`.
-- **Changes not applying**: Restart the game/server; create a NEW world; check logs for "ALL PATCHES APPLIED".
-- **Manager can’t find version**: Wait a few minutes after publish and refresh mod list; use protocol install.
-
-## Logging
-
-- BepInEx logs path: `BepInEx/LogOutput.log`.
-- Look for prefixes `[Riverheim Config]` during startup indicating patches and applied values.
-
-## Known Limitations
-
-- Experimental; values outside practical ranges may hurt performance or stability.
-- World generation is deterministic per world seed; existing worlds may not reflect config changes made after creation.
-
-## Support / Feedback
-
-- Riverheim Discord (preferred for quick feedback).
-- Thunderstore mod page discussions.
-- GitHub repository: https://github.com/lwackahg/Riverheim_Config
-
-## Roadmap
-
-- Safer defaults and validation for extreme values.
-- Optional reduced logging mode once stable.
-- Preset profiles (e.g., lake-heavy, mega-rivers) in separate config files.
-
-## Credits
-
-- ServerSync: blaxxun-boop
-- Riverheim: Riverheim_Dev
-
-## License
-
-Use at your own risk. No warranty. See repository for details if a license is later added.
+Run `./package.ps1` after a successful build to create the Thunderstore archive.

@@ -15,3 +15,6 @@ package_temp/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Local reference copy of the Gurebu-Riverheim package (third-party)
+Gurebu-Riverheim/

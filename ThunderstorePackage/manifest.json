@@ -1,10 +1,10 @@
 {
     "name": "Riverheim_Config",
-    "version_number": "1.0.3",
+    "version_number": "2.0.0",
     "website_url": "https://github.com/lwackahg/Riverheim_Config",
-    "description": "Server-enforced configuration for Riverheim Rivers & Lakes mod. Allows customization of river density, size, lakes, and world generation parameters with automatic client synchronization.",
+    "description": "Server-synchronized world-generation controls for Gurebu-Riverheim 1.1.x: world, rivers, lakes, and biome placement biases.",
     "dependencies": [
         "denikson-BepInExPack_Valheim-5.4.2202",
-        "Riverheim_Dev-Riverheim-0.12.0"
+        "Gurebu-Riverheim-1.1.0"
     ]
 }

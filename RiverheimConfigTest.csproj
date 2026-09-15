@@ -37,9 +37,14 @@
     </Reference>
   </ItemGroup>
 
+  <!-- Ensure ServerSync.dll is copied to output for ILRepack -->
   <ItemGroup>
-    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
+    <None Include="ServerSync.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
+
+  <!-- Removed ILRepack - will deploy ServerSync.dll separately -->
 
   <!-- BepInEx references -->
   <ItemGroup Condition="Exists('$(BepInExCoreDir)\BepInEx.dll')">

@@ -1,19 +1,11 @@
-# Riverheim Config - Source Code
+# Riverheim Config 2.0.0 Source
 
-> WARNING: BETA — Untested. Back up your worlds and saves.
-> Changes may have unintended consequences. Use at your own risk.
+This source targets Gurebu-Riverheim 1.1.x. It patches `Riverheim.Configuration.ConfigManager.GetConfig` and modifies the returned generation configuration immediately before Riverheim runs its pipeline.
 
-Complete source code for the Riverheim Config mod.
+Build with a Valheim install path supplied when needed:
 
-## Build Command
-```
-dotnet msbuild RiverheimConfigTest.csproj /t:Rebuild /p:Configuration=Release
+```powershell
+dotnet msbuild RiverheimConfigTest.csproj /t:Rebuild /p:Configuration=Release /p:ValheimDir="C:\\Program Files (x86)\\Steam\\steamapps\\common\\Valheim"
 ```
 
-Output: bin\Release\RiverheimConfigTest.dll
-
-## Files
-- RiverheimConfigTest.cs - Main plugin code
-- RiverheimConfigTest.csproj - Project file
-- ILRepack.targets - Merges ServerSync into output DLL
-- ServerSync.dll - Config synchronization library
+The output is `bin/Release/RiverheimConfigTest.dll`.

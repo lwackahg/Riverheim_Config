@@ -59,10 +59,11 @@ Copy-Item "$packageDir\README.md" $tempDir
 Copy-Item "$packageDir\CHANGELOG.md" $tempDir -ErrorAction SilentlyContinue
 Copy-Item "$packageDir\icon.png" $tempDir
 
-# Place plugin DLL under BepInEx/plugins to support auto-install by mod managers
+# Place plugin DLL + ServerSync under BepInEx/plugins to support auto-install by mod managers
 $pluginsDir = Join-Path $tempDir "BepInEx\plugins"
 New-Item -ItemType Directory -Path $pluginsDir -Force | Out-Null
 Copy-Item "bin\Release\RiverheimConfigTest.dll" (Join-Path $pluginsDir "RiverheimConfigTest.dll")
+Copy-Item "bin\Release\ServerSync.dll" (Join-Path $pluginsDir "ServerSync.dll")
 
 # Include source code
 Write-Host "Including source code..." -ForegroundColor Green
