@@ -11,7 +11,8 @@ $releasesDir = "Releases"
 $outputZip = Join-Path $releasesDir "$packageName-$version.zip"
 $packageDir = "ThunderstorePackage"
 # The source files shipped in the package are the repository's own; SourceCode/ only holds the README for them.
-$sourceFiles = @("RiverheimConfigTest.cs", "RiverheimSettings.cs", "RiverheimConfigTest.csproj", "ServerSync.dll", "SourceCode\README.md")
+# Source files shipped in the package, at the same relative paths as in the repository (the .csproj expects them there).
+$sourceFiles = @("RiverheimConfigTest.cs", "RiverheimSettings.cs", "RiverheimConfigTest.csproj", "ThirdParty\ServerSync\ConfigSync.cs", "ThirdParty\ServerSync\LICENSE.txt")
 
 # Ensure Releases folder exists
 if (-not (Test-Path $releasesDir)) {
@@ -66,17 +67,21 @@ Copy-Item "$packageDir\README.md" $tempDir
 Copy-Item "$packageDir\CHANGELOG.md" $tempDir -ErrorAction SilentlyContinue
 Copy-Item "$packageDir\icon.png" $tempDir
 
-# Place plugin DLL + ServerSync under BepInEx/plugins to support auto-install by mod managers
+# Place the plugin DLL under BepInEx/plugins to support auto-install by mod managers (ServerSync is compiled into it)
 $pluginsDir = Join-Path $tempDir "BepInEx\plugins"
 New-Item -ItemType Directory -Path $pluginsDir -Force | Out-Null
 Copy-Item "bin\Release\RiverheimConfigTest.dll" (Join-Path $pluginsDir "RiverheimConfigTest.dll")
-Copy-Item "bin\Release\ServerSync.dll" (Join-Path $pluginsDir "ServerSync.dll")
 
 # Include source code
 Write-Host "Including source code..." -ForegroundColor Green
 $sourceZipDir = "$tempDir\SourceCode"
 New-Item -ItemType Directory -Path $sourceZipDir | Out-Null
-foreach ($sourceFile in $sourceFiles) { Copy-Item $sourceFile $sourceZipDir }
+foreach ($sourceFile in $sourceFiles) {
+    $target = Join-Path $sourceZipDir $sourceFile
+    New-Item -ItemType Directory -Path (Split-Path -Parent $target) -Force | Out-Null
+    Copy-Item $sourceFile $target
+}
+Copy-Item "SourceCode\README.md" $sourceZipDir
 
 # Create zip file
 Write-Host "Creating zip file..." -ForegroundColor Green

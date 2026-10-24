@@ -7,7 +7,7 @@ Riverheim_Config/
 ├── RiverheimConfigTest.cs       BepInEx plugin
 ├── RiverheimSettings.cs         the settings table, shared with the AtlasBuilder UI launcher
 ├── RiverheimConfigTest.csproj
-├── ServerSync.dll
+├── ThirdParty/ServerSync/        ServerSync v1.20 source and licence, compiled into the plugin
 ├── settings.json, SETTINGS.md   generated from RiverheimSettings.cs (rhconfig-test json / md)
 ├── presets/BEST.cfg
 ├── ThunderstorePackage/         manifest.json, README.md, CHANGELOG.md, icon.png
@@ -32,7 +32,7 @@ Riverheim_Config/
 3. Bump the version in `ThunderstorePackage/manifest.json` and `PluginVersion` in `RiverheimConfigTest.cs` (package.ps1 refuses to package if they differ), and add a `CHANGELOG.md` entry. Keep `ThunderstorePackage/README.md` and the root `README.md` in step.
 4. Build and package:
    ```powershell
-   dotnet msbuild RiverheimConfigTest.csproj /t:Rebuild /p:Configuration=Release
+   dotnet msbuild RiverheimConfigTest.csproj -t:Rebuild -p:Configuration=Release
    .\package.ps1
    ```
 5. Test the zip from `Releases/` on a local server and client (config sync, a new world, `BepInEx/LogOutput.log`).
@@ -44,8 +44,7 @@ Riverheim_Config/
 Riverheim_Config-<version>.zip
 ├── manifest.json, README.md, CHANGELOG.md, icon.png
 ├── BepInEx/plugins/RiverheimConfigTest.dll
-├── BepInEx/plugins/ServerSync.dll
-└── SourceCode/  (RiverheimConfigTest.cs, RiverheimSettings.cs, RiverheimConfigTest.csproj, ServerSync.dll, README.md)
+└── SourceCode/  (RiverheimConfigTest.cs, RiverheimSettings.cs, RiverheimConfigTest.csproj, ThirdParty/ServerSync/, README.md)
 ```
 
 ## Manifest

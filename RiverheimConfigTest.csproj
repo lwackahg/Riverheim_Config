@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <!-- ServerSync's source (ThirdParty/ServerSync) uses current C# syntax. -->
+    <LangVersion>latest</LangVersion>
     <!-- Change this if your Valheim install is elsewhere -->
     <ValheimDir Condition=" '$(ValheimDir)' == '' ">F:\SteamLibrary\steamapps\common\Valheim</ValheimDir>
     <BepInExCoreDir>$(ValheimDir)\BepInEx\core</BepInExCoreDir>
@@ -27,25 +29,16 @@
   <ItemGroup>
     <Compile Include="RiverheimConfigTest.cs" />
     <Compile Include="RiverheimSettings.cs" />
+    <!-- ServerSync is compiled in rather than shipped as ServerSync.dll, so another mod's (possibly outdated)
+         ServerSync.dll can never be loaded in its place. -->
+    <Compile Include="ThirdParty\ServerSync\ConfigSync.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="ServerSync">
-      <HintPath>ServerSync.dll</HintPath>
-      <Private>true</Private>
-    </Reference>
+    <Reference Include="System.IO.Compression" />
   </ItemGroup>
-
-  <!-- Ensure ServerSync.dll is copied to output for ILRepack -->
-  <ItemGroup>
-    <None Include="ServerSync.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <!-- Removed ILRepack - will deploy ServerSync.dll separately -->
 
   <!-- BepInEx references -->
   <ItemGroup Condition="Exists('$(BepInExCoreDir)\BepInEx.dll')">
@@ -95,7 +88,31 @@
     </Reference>
   </ItemGroup>
 
-  <!-- Valheim game assembly (not strictly needed here, but harmless) -->
+  <!-- Valheim's utility assembly, used by ServerSync -->
+  <ItemGroup Condition="Exists('$(UnityManagedDir)\assembly_utils.dll')">
+    <Reference Include="assembly_utils">
+      <HintPath>$(UnityManagedDir)\assembly_utils.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Unity UI, used by ServerSync's version mismatch message -->
+  <ItemGroup Condition="Exists('$(UnityManagedDir)\UnityEngine.UI.dll')">
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(UnityManagedDir)\UnityEngine.UI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- TextMeshPro, used by ServerSync's version mismatch message -->
+  <ItemGroup Condition="Exists('$(UnityManagedDir)\Unity.TextMeshPro.dll')">
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>$(UnityManagedDir)\Unity.TextMeshPro.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Valheim game assembly, used by ServerSync -->
   <ItemGroup Condition="Exists('$(UnityManagedDir)\assembly_valheim.dll')">
     <Reference Include="assembly_valheim">
       <HintPath>$(UnityManagedDir)\assembly_valheim.dll</HintPath>
