@@ -1,10 +1,10 @@
 {
     "name": "Riverheim_Config",
-    "version_number": "2.0.0",
+    "version_number": "3.0.0",
     "website_url": "https://github.com/lwackahg/Riverheim_Config",
-    "description": "Server-synchronized world-generation controls for Gurebu-Riverheim 1.1.x: world, rivers, lakes, and biome placement biases.",
+    "description": "Server-synchronized world-generation controls for Gurebu-Riverheim 1.2.x: world, rivers, lakes, biomes, landmass, mountains, terrain and poles. Preview them in the AtlasBuilder UI.",
     "dependencies": [
         "denikson-BepInExPack_Valheim-5.4.2202",
-        "Gurebu-Riverheim-1.1.0"
+        "Gurebu-Riverheim-1.2.1"
     ]
 }

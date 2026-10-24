@@ -1,5 +1,24 @@
 # Riverheim Config - Changelog
 
+## [3.0.0] - unreleased
+
+### For Gurebu-Riverheim 1.2.x, with many more controls
+
+- Dependency moved to `Gurebu-Riverheim-1.2.1`. Riverheim 1.1.0 to 1.2.1 kept every field this mod writes; 1.1.1's lowland Black Forest variant is now covered too.
+- **Defaults now mean "leave Riverheim's value alone."** A setting at its default is not written, so an untouched config generates stock Riverheim worlds even after Riverheim changes a default, and Riverheim's per-version defaults (which it pins in each world since 1.2.0) stay in control.
+- `ForestWeight` default corrected from 261 to 258.5 (Riverheim 1.1.1 moved 2.5 to the lowland variant). New `MarshWeight` (5.5) and `ForestLowlandsWeight` (2.5) in `5. Biome Amounts`.
+- New sections: `7. Landmass` (land cohesion and distance weighting, swirl arms/twist/start radius, harbor radius and circularity, small-island removal, coastal trim, island merge threshold), `8. Mountains` (biome threshold, cut-down ratio, minimum patch size, selection randomness, area score, edge trim), `9. River Features` (channel width and meander, rainfall pattern size/variability/minimum/basin contribution, source/confluence/bend features), `10. Sub-biomes` (Mistglade rate and patch size, marsh and swamp base height, lowland Black Forest shaping), `11. Terrain` (cliff intensity and terrace height, terracing step, flatland amount, land slope, erosion rate, Meadows and Plains shaping intensity), `12. Poles` (polar belt offset, radius and edge waviness, polar gap and trench width).
+- Every setting now has a range (BepInEx clamps values outside it) and a plain-language description; the full table is in `SETTINGS.md`.
+- The settings table (`RiverheimSettings.cs`) is shared verbatim with the Riverheim AtlasBuilder UI launcher, which compiles it into its AtlasBuilder hook and builds its fields from the exported `settings.json`. Mod and launcher can no longer drift apart.
+- New `tests/`: a DLL check that every path resolves and every default equals Riverheim's own value, and an AtlasBuilder harness proving that stock values render byte-identical to `--preset Default`, that each setting visibly changes the map, and that `presets/BEST.cfg` still renders as before.
+- Settings for the lowland Black Forest variant are skipped with a warning on Riverheim builds that lack the field (and are not previewable in AtlasBuilder 1.0.0).
+
+### Migration
+
+- 2.0.0 config files keep working. New sections are added with their defaults the first time the game starts.
+- A 2.0.0 file that still contains `ForestWeight = 261` now forces 261 instead of leaving Riverheim's 258.5; set it to 258.5 to get the stock amount.
+- As before, these settings apply to every world Riverheim generates while the mod is installed, so a changed config changes existing worlds. See `docs/preset-handler-notes.md` for why per-world settings are not possible with Riverheim 1.2.1.
+
 ## [2.0.0] - 2026-09-14
 
 ### Breaking: rebuilt for Gurebu-Riverheim 1.1.x
