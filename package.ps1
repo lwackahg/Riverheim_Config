@@ -10,7 +10,8 @@ $version = $manifest.version_number
 $releasesDir = "Releases"
 $outputZip = Join-Path $releasesDir "$packageName-$version.zip"
 $packageDir = "ThunderstorePackage"
-$sourceDir = "SourceCode"
+# The source files shipped in the package are the repository's own; SourceCode/ only holds the README for them.
+$sourceFiles = @("RiverheimConfigTest.cs", "RiverheimSettings.cs", "RiverheimConfigTest.csproj", "ServerSync.dll", "SourceCode\README.md")
 
 # Ensure Releases folder exists
 if (-not (Test-Path $releasesDir)) {
@@ -41,7 +42,13 @@ if ($missing.Count -gt 0) {
     Write-Host "Please ensure:" -ForegroundColor Yellow
     Write-Host "  1. You have built the project (dotnet msbuild /t:Rebuild /p:Configuration=Release)" -ForegroundColor Yellow
     Write-Host "  2. You have created icon.png in ThunderstorePackage folder (256x256 PNG)" -ForegroundColor Yellow
-    Write-Host "  3. Run setup_package.ps1 first to organize files" -ForegroundColor Yellow
+    exit 1
+}
+
+# The plugin version must match the manifest.
+$pluginVersion = (Select-String -Path "RiverheimConfigTest.cs" -Pattern 'PluginVersion = "([^"]+)"').Matches[0].Groups[1].Value
+if ($pluginVersion -ne $version) {
+    Write-Host "ERROR: manifest.json says $version but RiverheimConfigTest.cs says PluginVersion $pluginVersion" -ForegroundColor Red
     exit 1
 }
 
@@ -69,7 +76,7 @@ Copy-Item "bin\Release\ServerSync.dll" (Join-Path $pluginsDir "ServerSync.dll")
 Write-Host "Including source code..." -ForegroundColor Green
 $sourceZipDir = "$tempDir\SourceCode"
 New-Item -ItemType Directory -Path $sourceZipDir | Out-Null
-Copy-Item "$sourceDir\*" $sourceZipDir -Recurse
+foreach ($sourceFile in $sourceFiles) { Copy-Item $sourceFile $sourceZipDir }
 
 # Create zip file
 Write-Host "Creating zip file..." -ForegroundColor Green

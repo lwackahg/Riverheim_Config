@@ -18,3 +18,10 @@ Thumbs.db
 
 # Local reference copy of the Gurebu-Riverheim package (third-party)
 Gurebu-Riverheim/
+
+# Test outputs
+tests/out/
+
+# Local reference copy of the Gurebu-Riverheim_AtlasBuilder package (third-party) and local logs
+Gurebu-Riverheim_AtlasBuilder/
+logs/

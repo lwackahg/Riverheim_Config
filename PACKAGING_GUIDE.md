@@ -1,104 +1,54 @@
-# Thunderstore Packaging Guide
+# Packaging Guide
 
-## Folder Structure
-
-```
-a:\Valheim Fix\
-├── ThunderstorePackage/     (Package files for distribution)
-│   ├── manifest.json
-│   ├── README.md
-│   ├── CHANGELOG.md
-│   └── icon.png (YOU CREATE THIS)
-├── SourceCode/              (Source code for modders)
-│   ├── RiverheimConfigTest.cs
-│   ├── RiverheimConfigTest.csproj
-│   ├── ILRepack.targets
-│   ├── ServerSync.dll
-│   └── README.md
-├── setup_package.ps1        (Run once to organize files)
-└── package.ps1              (Run to create zip)
-```
-
-## Steps to Package
-
-### 1. Setup Folder Structure (First Time Only)
-```powershell
-.\setup_package.ps1
-```
-
-This organizes all files into proper folders.
-
-### 2. Create Icon
-Create a 256x256 PNG image named `icon.png` in the `ThunderstorePackage` folder.
-- Use a river/water theme
-- Keep it simple and recognizable
-- Delete `icon_instructions.txt` after creating icon
-
-### 3. Build the Mod
-```powershell
-dotnet msbuild RiverheimConfigTest.csproj /t:Rebuild /p:Configuration=Release
-```
-
-### 4. Run Package Script
-```powershell
-.\package.ps1
-```
-
-This will create: `Riverheim_Config-1.0.0.zip`
-
-### 5. Test Locally
-1. Extract the zip to your BepInEx plugins folder
-2. Verify the DLL loads correctly
-3. Test config synchronization
-
-### 6. Upload to Thunderstore
-1. Go to https://thunderstore.io/c/valheim/create/
-2. Upload `Riverheim_Config-1.0.0.zip`
-3. Fill in any additional metadata
-4. Publish!
-
-## Package Structure
+## Folder structure
 
 ```
-Riverheim_Config-1.0.0.zip
-├── manifest.json
-├── README.md
-├── CHANGELOG.md
-├── icon.png
-├── RiverheimConfigTest.dll
-└── SourceCode/
-    ├── RiverheimConfigTest.cs
-    ├── RiverheimConfigTest.csproj
-    ├── ILRepack.targets
-    ├── ServerSync.dll
-    └── README.md
+Riverheim_Config/
+├── RiverheimConfigTest.cs       BepInEx plugin
+├── RiverheimSettings.cs         the settings table, shared with the AtlasBuilder UI launcher
+├── RiverheimConfigTest.csproj
+├── ServerSync.dll
+├── settings.json, SETTINGS.md   generated from RiverheimSettings.cs (rhconfig-test json / md)
+├── presets/BEST.cfg
+├── ThunderstorePackage/         manifest.json, README.md, CHANGELOG.md, icon.png
+├── SourceCode/README.md         README for the source files shipped in the package
+├── tests/                       DLL check and AtlasBuilder render tests (see tests/README.md)
+├── docs/                        design notes
+└── package.ps1                  builds the Thunderstore zip into Releases/
 ```
 
-Users get the compiled DLL, modders get the full source code!
+## Steps to release
 
-## Manifest Details
+1. Edit `RiverheimSettings.cs`, then regenerate the derived files and check them against Riverheim:
+   ```powershell
+   dotnet build tests\RiverheimConfig.Tests -c Release
+   $tool = "tests\RiverheimConfig.Tests\bin\Release\net8.0\rhconfig-test.dll"
+   dotnet $tool check Gurebu-Riverheim\Riverheim.dll
+   dotnet $tool json settings.json
+   dotnet $tool md SETTINGS.md
+   .\tests\Run-AtlasTests.ps1
+   ```
+2. Copy `RiverheimSettings.cs` and `settings.json` to the AtlasBuilder UI launcher repository, which ships both.
+3. Bump the version in `ThunderstorePackage/manifest.json` and `PluginVersion` in `RiverheimConfigTest.cs` (package.ps1 refuses to package if they differ), and add a `CHANGELOG.md` entry. Keep `ThunderstorePackage/README.md` and the root `README.md` in step.
+4. Build and package:
+   ```powershell
+   dotnet msbuild RiverheimConfigTest.csproj /t:Rebuild /p:Configuration=Release
+   .\package.ps1
+   ```
+5. Test the zip from `Releases/` on a local server and client (config sync, a new world, `BepInEx/LogOutput.log`).
+6. Upload at https://thunderstore.io/c/valheim/create/.
 
-- **Name**: `Riverheim_Config` (underscores become spaces in display)
-- **Version**: `1.0.0` (semantic versioning)
-- **Dependencies**: 
-  - BepInExPack_Valheim 5.4.2202
-  - Riverheim 0.12.0
+## Package contents
 
-## Before Publishing
+```
+Riverheim_Config-<version>.zip
+├── manifest.json, README.md, CHANGELOG.md, icon.png
+├── BepInEx/plugins/RiverheimConfigTest.dll
+├── BepInEx/plugins/ServerSync.dll
+└── SourceCode/  (RiverheimConfigTest.cs, RiverheimSettings.cs, RiverheimConfigTest.csproj, ServerSync.dll, README.md)
+```
 
-- [ ] Icon created (256x256 PNG)
-- [ ] Mod built successfully
-- [ ] Tested on local server
-- [ ] Tested client sync
-- [ ] README reviewed
-- [ ] Version number correct in manifest.json
-- [ ] Dependencies correct
+## Manifest
 
-## Updating Version
-
-When releasing updates:
-1. Update version in `manifest.json`
-2. Update version in `RiverheimConfigTest.cs` (PluginVersion)
-3. Add entry to `CHANGELOG.md`
-4. Rebuild and repackage
-5. Upload new version to Thunderstore
+- **Name**: `Riverheim_Config`
+- **Dependencies**: `denikson-BepInExPack_Valheim`, `Gurebu-Riverheim` (the version the release was tested against)
