@@ -10,8 +10,21 @@
     <AssemblyName>rhconfig-test</AssemblyName>
     <RootNamespace>RiverheimConfig.Tests</RootNamespace>
     <LangVersion>latest</LangVersion>
+    <!-- The retarget command rewrites assemblies with Mono.Cecil, taken from BepInEx (no package download).
+         Pass -p:MonoCecilDir=... or -p:ValheimDir=... when Valheim is installed elsewhere. -->
+    <ValheimDir Condition=" '$(ValheimDir)' == '' ">F:\SteamLibrary\steamapps\common\Valheim</ValheimDir>
+    <MonoCecilDir Condition=" '$(MonoCecilDir)' == '' and Exists('$(ValheimDir)\BepInEx\core\Mono.Cecil.dll') ">$(ValheimDir)\BepInEx\core</MonoCecilDir>
+    <MonoCecilDir Condition=" '$(MonoCecilDir)' == '' and Exists('$(MSBuildThisFileDirectory)..\..\bin\Release\Mono.Cecil.dll') ">$(MSBuildThisFileDirectory)..\..\bin\Release</MonoCecilDir>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\RiverheimSettings.cs" Link="RiverheimSettings.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Cecil">
+      <HintPath>$(MonoCecilDir)\Mono.Cecil.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Target Name="CheckMonoCecil" BeforeTargets="BeforeBuild">
+    <Error Condition="!Exists('$(MonoCecilDir)\Mono.Cecil.dll')" Text="Mono.Cecil.dll not found. Pass -p:MonoCecilDir=&lt;folder&gt; (BepInEx\core of a Valheim install has it) or -p:ValheimDir=&lt;Valheim folder&gt;." />
+  </Target>
 </Project>

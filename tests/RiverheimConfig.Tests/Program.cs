@@ -19,7 +19,10 @@ namespace RiverheimConfig.Tests
     //   rhconfig-test apply <Riverheim.dll> <cfg>           applies a cfg and prints every field that changed against the defaults
     //   rhconfig-test dump <Riverheim.dll> [version|master] prints every leaf field of the default config
     //   rhconfig-test json <out.json>                       exports the settings table for the AtlasBuilder launcher
+    //   rhconfig-test md <out.md>                           writes SETTINGS.md
     //   rhconfig-test cfg <out.cfg>                         writes a cfg with every setting at its listed default
+    //   rhconfig-test retarget <Riverheim.dll> <Riverheim.Dev.dll> <outDir> [version]
+    //                                                       makes AtlasBuilder run the given Riverheim (see Retarget)
     public static class Program
     {
         private const BindingFlags Any = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -28,7 +31,7 @@ namespace RiverheimConfig.Tests
         {
             if (args.Length == 0)
             {
-                Console.Error.WriteLine("usage: rhconfig-test check|stock-cfg|apply|dump <Riverheim.dll> [...] | json <out.json> | cfg <out.cfg>");
+                Console.Error.WriteLine("usage: rhconfig-test check|stock-cfg|apply|dump <Riverheim.dll> [...] | json <out.json> | md <out.md> | cfg <out.cfg> | retarget <Riverheim.dll> <Riverheim.Dev.dll> <outDir> [version]");
                 return 2;
             }
             switch (args[0])
@@ -37,6 +40,7 @@ namespace RiverheimConfig.Tests
                 case "stock-cfg": return StockCfg(args[1], args[2]);
                 case "apply": return ApplyCfg(args[1], args[2]);
                 case "dump": return Dump(args[1], args.Length > 2 ? args[2] : null);
+                case "retarget": return Retarget(args[1], args[2], args[3], args.Length > 4 ? int.Parse(args[4], CultureInfo.InvariantCulture) : (int?)null);
                 case "json": File.WriteAllText(args[1], Json(), new UTF8Encoding(false)); Console.WriteLine("Wrote " + args[1]); return 0;
                 case "md": File.WriteAllText(args[1], Markdown(), new UTF8Encoding(false)); Console.WriteLine("Wrote " + args[1]); return 0;
                 case "cfg": File.WriteAllText(args[1], Cfg(null), new UTF8Encoding(false)); Console.WriteLine("Wrote " + args[1]); return 0;
@@ -219,6 +223,63 @@ namespace RiverheimConfig.Tests
                 Console.WriteLine("  FAILED: " + failure);
             }
             return failed.Count == 0 ? 0 : 1;
+        }
+
+        // Prepares an installed Riverheim (the BepInEx plugin Riverheim.dll) to run inside Gurebu's AtlasBuilder, so the
+        // render tests use the player's actual Riverheim instead of the older build AtlasBuilder bundles:
+        //   1. Riverheim.dll is written as Riverheim.Core.dll, the assembly name AtlasBuilder references. The code is
+        //      unchanged; its pipeline registry scans the whole assembly, so BepInEx, Harmony and Unity assemblies
+        //      must be resolvable at run time (tests/DepsHook.cs does that).
+        //   2. AtlasBuilder's Riverheim.Dev.dll hard-codes the Default preset as ("builtin.amur", 1). The version is
+        //      replaced by the Riverheim's own PRESET_DEFAULT_VERSION (2 in 1.2.1), which is what new worlds get in
+        //      game, so --preset Default renders the world a player would see.
+        // Nothing is modified in place; both files are written to outDir.
+        private static int Retarget(string riverheimDll, string devDll, string outDir, int? versionOverride)
+        {
+            Directory.CreateDirectory(outDir);
+            Mono.Cecil.AssemblyDefinition core = Mono.Cecil.AssemblyDefinition.ReadAssembly(Path.GetFullPath(riverheimDll));
+            Mono.Cecil.TypeDefinition manager = core.MainModule.GetType("Riverheim.Configuration.ConfigManager");
+            if (manager == null)
+            {
+                Console.Error.WriteLine(riverheimDll + " has no Riverheim.Configuration.ConfigManager");
+                return 1;
+            }
+            int version = versionOverride ?? (int)manager.Fields.First(f => f.Name == "PRESET_DEFAULT_VERSION").Constant;
+            Console.WriteLine("Retargeting AtlasBuilder to " + core.Name.Name + " " + core.Name.Version + " (default preset version " + version + ")");
+            core.Name.Name = "Riverheim.Core";
+            core.MainModule.Name = "Riverheim.Core.dll";
+            core.Write(Path.Combine(outDir, "Riverheim.Core.dll"));
+
+            Mono.Cecil.AssemblyDefinition dev = Mono.Cecil.AssemblyDefinition.ReadAssembly(Path.GetFullPath(devDll));
+            int patched = 0;
+            foreach (Mono.Cecil.TypeDefinition type in dev.MainModule.GetTypes())
+            {
+                foreach (Mono.Cecil.MethodDefinition method in type.Methods.Where(m => m.HasBody))
+                {
+                    // Pattern: ldstr "builtin.amur"; ldc.i4 <version>; newobj WorldSettings(string, int)
+                    Mono.Collections.Generic.Collection<Mono.Cecil.Cil.Instruction> code = method.Body.Instructions;
+                    for (int i = 0; i + 2 < code.Count; i++)
+                    {
+                        Mono.Cecil.MethodReference ctor = code[i + 2].Operand as Mono.Cecil.MethodReference;
+                        if (code[i].OpCode == Mono.Cecil.Cil.OpCodes.Ldstr && (string)code[i].Operand == "builtin.amur"
+                            && ctor != null && ctor.DeclaringType.Name == "WorldSettings")
+                        {
+                            code[i + 1].OpCode = Mono.Cecil.Cil.OpCodes.Ldc_I4;
+                            code[i + 1].Operand = version;
+                            patched++;
+                            Console.WriteLine("  " + type.Name + "." + method.Name + ": Default preset version -> " + version);
+                        }
+                    }
+                }
+            }
+            dev.Write(Path.Combine(outDir, "Riverheim.Dev.dll"));
+            if (patched == 0)
+            {
+                Console.Error.WriteLine("No Default preset definition found in " + devDll + "; AtlasBuilder's layout changed.");
+                return 1;
+            }
+            Console.WriteLine("Wrote Riverheim.Core.dll and Riverheim.Dev.dll to " + outDir);
+            return 0;
         }
 
         private static int Dump(string dll, string version)
