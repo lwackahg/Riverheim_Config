@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <Compile Include="RiverheimConfigTest.cs" />
+    <Compile Include="RiverheimSettings.cs" />
   </ItemGroup>
 
   <ItemGroup>
