@@ -28,7 +28,7 @@
       "path": "common.worldSize",
       "optional": false,
       "previewNote": null,
-      "description": "Radius of the world Riverheim generates, in metres. Keep 10500 and use Expand World Size stretching for a bigger or smaller world: biome bands scale with this value, but the poles, the landmass swirl and the rainfall pattern do not, so changing it distorts the layout."
+      "description": "Radius of the world Riverheim generates, in metres. Keep 10500 and use Expand World Size stretching for a bigger or smaller world: biome bands scale with this value, but the poles, the landmass swirl and the rainfall pattern do not, so changing it distorts the layout. The polar belts begin 8000 m from the centre by default (see Polar belt radius) and must stay well inside this radius, or Riverheim fails to generate the world."
     },
     {
       "section": "1. World",
@@ -492,7 +492,7 @@
       "decimals": 1,
       "path": "world.biomes.competitivePlacement.main.biomes.forestLowlands.weight",
       "optional": true,
-      "previewNote": "Added in Riverheim 1.1.1. AtlasBuilder 1.0.0 bundles an older Riverheim without this feature, so map previews ignore it.",
+      "previewNote": null,
       "description": "How much of the contested land the lowland Black Forest variant takes. It only appears near spawn and prefers low ground close to water, to put tin within early reach. 0 turns it off."
     },
     {
@@ -693,7 +693,7 @@
     {
       "section": "7. Landmass",
       "key": "SmallIslandSizeThreshold",
-      "label": "Remove islands below (tiles)",
+      "label": "Remove islands below (m)",
       "default": 0,
       "integer": false,
       "min": 0,
@@ -703,7 +703,7 @@
       "path": "world.landmass.postprocessing.main.smallIslandSizeThreshold",
       "optional": false,
       "previewNote": null,
-      "description": "Landmasses with fewer generation tiles than this are removed. 0 keeps every island; Riverheim's Deep North region uses 220 to clear small ones."
+      "description": "Landmasses smaller than about this many metres across are removed after painting. 0 keeps every island; Riverheim's own Deep North region uses 220 to clear small ones."
     },
     {
       "section": "7. Landmass",
@@ -763,7 +763,7 @@
       "path": "world.height.settlement.main.mountainCutdownRatio",
       "optional": false,
       "previewNote": null,
-      "description": "Share of height removed from mountain candidates Riverheim does not keep as mountains. Higher values flatten rejected mountains more."
+      "description": "Share of height taken off the mountain candidates Riverheim does not keep as mountains when it settles the terrain. Higher values flatten rejected mountains more; 0 leaves them standing."
     },
     {
       "section": "8. Mountains",
@@ -778,7 +778,7 @@
       "path": "world.height.settlement.main.mountainMinPatchSize",
       "optional": false,
       "previewNote": null,
-      "description": "Smallest mountain area, in generation tiles, that is kept as a mountain. Higher values leave only the big ranges."
+      "description": "Mountain patches smaller than this are culled after settling. Higher values leave only the big ranges."
     },
     {
       "section": "8. Mountains",
@@ -891,14 +891,14 @@
       "label": "Rainfall minimum",
       "default": 0.05,
       "integer": false,
-      "min": 0,
+      "min": 0.001,
       "max": 10,
       "step": 0.01,
       "decimals": 3,
       "path": "world.rivers.precipitation.main.minimum",
       "optional": false,
       "previewNote": null,
-      "description": "Lowest rainfall any tile gets. Higher values give dry regions more water, so more small rivers survive."
+      "description": "Lowest rainfall any tile gets. Higher values give dry regions more water, so more small rivers survive. Must stay above 0: at exactly 0 Riverheim fails to generate the world."
     },
     {
       "section": "9. River Features",
@@ -1032,7 +1032,7 @@
       "decimals": 2,
       "path": "world.biomes.postprocessing.main.forestLowlandsShapingOffset",
       "optional": true,
-      "previewNote": "Added in Riverheim 1.1.1. AtlasBuilder 1.0.0 bundles an older Riverheim without this feature, so map previews ignore it.",
+      "previewNote": null,
       "description": "Height offset used when shaping the lowland Black Forest variant's terrain."
     },
     {
@@ -1047,7 +1047,7 @@
       "decimals": 2,
       "path": "world.biomes.postprocessing.main.forestLowlandsShapingIntensity",
       "optional": true,
-      "previewNote": "Added in Riverheim 1.1.1. AtlasBuilder 1.0.0 bundles an older Riverheim without this feature, so map previews ignore it.",
+      "previewNote": null,
       "description": "How strongly the lowland Black Forest variant's terrain is reshaped. Higher values make it stand out more from normal Black Forest."
     },
     {
@@ -1178,12 +1178,12 @@
       "integer": false,
       "min": 0,
       "max": 100000,
-      "step": 250,
+      "step": 100,
       "decimals": 0,
       "path": "world.polar.offset",
       "optional": false,
       "previewNote": null,
-      "description": "Distance, in metres, that the centre of each polar belt (Ashlands south, Deep North north) sits beyond the world centre. Larger values push the poles further out."
+      "description": "Offset, in metres, of the circle each polar belt (Ashlands south, Deep North north) is cut from. The belts begin Polar belt radius minus this offset from the world centre, 8000 m by default, so larger values pull the poles inwards. Keep that distance at least 1000 m inside the world radius: a belt that only just reaches the world makes Riverheim fail to generate it. Moving it 1000 m or more beyond the world radius (0 with the default radius) removes both belts."
     },
     {
       "section": "12. Poles",
@@ -1193,12 +1193,12 @@
       "integer": false,
       "min": 0,
       "max": 100000,
-      "step": 250,
+      "step": 100,
       "decimals": 0,
       "path": "world.polar.radius",
       "optional": false,
       "previewNote": null,
-      "description": "Radius, in metres, of the circle each polar belt is cut from. Together with Polar belt offset this sets where Ashlands and Deep North begin; AtlasBuilder's HugeWorld preset rescales both."
+      "description": "Radius, in metres, of the circle each polar belt is cut from. The belts begin Polar belt radius minus Polar belt offset from the world centre, 8000 m by default, so larger values push Ashlands and Deep North further out. Keep that distance at least 1000 m inside the world radius: a belt that only just reaches the world makes Riverheim fail to generate it, and 1000 m or more beyond the world radius removes both belts. AtlasBuilder's HugeWorld preset rescales both."
     },
     {
       "section": "12. Poles",

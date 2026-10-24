@@ -39,8 +39,9 @@ Every setting is enforced and synchronized by the server through ServerSync.
 - Riverheim terrain generation must match between server and clients. Keep Riverheim and this mod at identical versions across the group.
 - Changes apply whenever Riverheim generates terrain, to every world. Treat a configuration change as a new-world decision; do not change it for an established world without a tested backup. (Riverheim stores only its preset name and version in a world, not these values, so the mod cannot keep per-world settings yet. See `docs/preset-handler-notes.md` in the repository.)
 - Config files from Riverheim Config 2.0.0 keep working; the new sections are added with their defaults. `ForestWeight`'s default moved from 261 to 258.5 because Riverheim 1.1.1 gave 2.5 of it to the new lowland Black Forest variant; a 2.0.0 file that still says 261 will now force 261.
-- Settings for the lowland Black Forest variant (`ForestLowlandsWeight`, `ForestLowlandsShaping*`) cannot be previewed: AtlasBuilder 1.0.0 bundles a Riverheim from before 1.1.1.
-- This mod only exposes settings that map to real Riverheim 1.2 configuration fields, and each one was checked to visibly change AtlasBuilder's map of a test seed. Descriptions say what the field does as far as it is understood; the AtlasBuilder UI is the way to see what a value does to your seed.
+- AtlasBuilder 1.0.0 bundles a Riverheim from before 1.1.1, so the AtlasBuilder UI's previews ignore the lowland Black Forest settings (`ForestLowlandsWeight`, `ForestLowlandsShaping*`) for now. The mod applies them in game, and its own tests render them with Riverheim 1.2.1.
+- This mod only exposes settings that map to real Riverheim 1.2 configuration fields, and each one was checked to visibly change a map of a test seed drawn by Riverheim 1.2.1 itself (run inside AtlasBuilder). Descriptions say what the field does as far as it is understood; the AtlasBuilder UI is the way to see what a value does to your seed.
+- Two things make Riverheim throw an error instead of generating a world, which the mod cannot prevent for you: `RainfallMinimum` at exactly 0 (the lowest allowed value is now 0.001), and polar belts that only just reach into the world (`PolarRadius - PolarOffset` within about 1000 m of `WorldRadius`; the default is 8000 m against 10500 m). The descriptions say so. What the game shows when that happens was not tested; AtlasBuilder aborts.
 
 ## Troubleshooting
 
@@ -58,4 +59,4 @@ dotnet tests\RiverheimConfig.Tests\bin\Release\net8.0\rhconfig-test.dll check Gu
 .\tests\Run-AtlasTests.ps1
 ```
 
-`tests/README.md` describes the checks: every field path against the real `Riverheim.dll`, and AtlasBuilder renders proving that stock values reproduce `--preset Default` byte for byte and that every setting changes the map. Run `./package.ps1` after a successful build to create the Thunderstore archive.
+`tests/README.md` describes the checks: every field path against the real `Riverheim.dll`, and AtlasBuilder renders proving that stock values reproduce `--preset Default` byte for byte and that every setting changes the map. The renders run the installed Riverheim 1.2.1 inside AtlasBuilder (which needs a Valheim install with BepInEx; `-Engine Bundled` uses AtlasBuilder's own older Riverheim instead). Run `./package.ps1` after a successful build to create the Thunderstore archive.

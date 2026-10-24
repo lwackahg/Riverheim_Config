@@ -91,23 +91,23 @@ namespace RiverheimConfig
             return new Setting { Section = section, Key = key, Label = label, Default = value, IsInteger = true, Min = min, Max = max, Step = 1, Decimals = 0, Path = path, Description = description };
         }
 
-        private static Setting Newer(Setting setting, string previewNote)
+        // Fields added in Riverheim 1.1.1. Older Riverheim builds (including the one AtlasBuilder 1.0.0 bundles) lack
+        // them and skip the setting with a warning instead of failing; the tests render them with Riverheim 1.2.1.
+        private static Setting Newer(Setting setting)
         {
             setting.Optional = true;
-            setting.PreviewNote = previewNote;
             return setting;
         }
 
         private const string Affinity = "world.biomes.affinity.main.";
         private const string Placement = "world.biomes.competitivePlacement.main.biomes.";
-        private const string NotPreviewed = "Added in Riverheim 1.1.1. AtlasBuilder 1.0.0 bundles an older Riverheim without this feature, so map previews ignore it.";
 
         // Defaults are Riverheim 1.2.1's own values (DefaultConfig plus the default preset's version-2 overrides).
         // Settings without a path are biome bands, applied as curves in Apply.
         public static readonly Setting[] All =
         {
             Number(World, "WorldRadius", "World radius (m)", 10500, 1000, 100000, 500, 0, "common.worldSize",
-                "Radius of the world Riverheim generates, in metres. Keep 10500 and use Expand World Size stretching for a bigger or smaller world: biome bands scale with this value, but the poles, the landmass swirl and the rainfall pattern do not, so changing it distorts the layout."),
+                "Radius of the world Riverheim generates, in metres. Keep 10500 and use Expand World Size stretching for a bigger or smaller world: biome bands scale with this value, but the poles, the landmass swirl and the rainfall pattern do not, so changing it distorts the layout. The polar belts begin 8000 m from the centre by default (see Polar belt radius) and must stay well inside this radius, or Riverheim fails to generate the world."),
             Number(World, "TileSpacing", "Tile spacing (m)", 60, 10, 1000, 5, 0, "common.tileSpacing",
                 "Distance between generation points in metres. Lower values add detail but take much longer, and river and lake counts grow with the number of points."),
             Number(World, "SeaFloorDepth", "Sea floor depth", -40, -1000, 1000, 1, 1, "common.oceanDepth",
@@ -173,7 +173,7 @@ namespace RiverheimConfig
             Number(Amounts, "MarshWeight", "Marsh amount", 5.5, 0, 100000, 1, 1, Placement + "marsh.weight",
                 "How much of the contested land Marsh takes. Marsh is the rare, mostly submerged sub-biome of Meadows found next to water; the game treats it as Meadows. Raising this makes more marsh patches."),
             Newer(Number(Amounts, "ForestLowlandsWeight", "Lowland Black Forest amount", 2.5, 0, 100000, 1, 1, Placement + "forestLowlands.weight",
-                "How much of the contested land the lowland Black Forest variant takes. It only appears near spawn and prefers low ground close to water, to put tin within early reach. 0 turns it off."), NotPreviewed),
+                "How much of the contested land the lowland Black Forest variant takes. It only appears near spawn and prefers low ground close to water, to put tin within early reach. 0 turns it off.")),
 
             Number(Bands, "MeadowsFadeEnd", "Meadows fades by (%)", 50, 1, 150, 1, 1, null,
                 "Meadows becomes less likely the further you travel from spawn and reaches its full penalty at this percentage of the world radius. Lower values keep Meadows closer to spawn."),
@@ -230,8 +230,8 @@ namespace RiverheimConfig
                 "Size of the rainfall pattern that feeds rivers, in metres. Larger values make bigger wet and dry regions."),
             Number(RiverFeatures, "RainfallVariability", "Rainfall variability", 1.9, 0, 100, 0.1, 2, "world.rivers.precipitation.main.variability",
                 "Contrast between wet and dry regions. Higher values make river sizes vary more across the world."),
-            Number(RiverFeatures, "RainfallMinimum", "Rainfall minimum", 0.05, 0, 10, 0.01, 3, "world.rivers.precipitation.main.minimum",
-                "Lowest rainfall any tile gets. Higher values give dry regions more water, so more small rivers survive."),
+            Number(RiverFeatures, "RainfallMinimum", "Rainfall minimum", 0.05, 0.001, 10, 0.01, 3, "world.rivers.precipitation.main.minimum",
+                "Lowest rainfall any tile gets. Higher values give dry regions more water, so more small rivers survive. Must stay above 0: at exactly 0 Riverheim fails to generate the world."),
             Number(RiverFeatures, "RainfallBasinContribution", "Basin contribution", 0.7, 0, 10, 0.05, 2, "world.rivers.precipitation.main.basinContribution",
                 "How much a river's drainage basin adds to its flow. Higher values make long rivers bigger."),
             Number(RiverFeatures, "SourceCuriosity", "River source features", 0.1, 0, 100, 0.05, 2, "world.rivers.curiosities.main.sourceMult",
@@ -250,9 +250,9 @@ namespace RiverheimConfig
             Number(SubBiomes, "SwampBaseHeight", "Swamp base height", -0.25, -50, 50, 0.25, 2, "world.biomes.postprocessing.main.swampBaseHeight",
                 "Height swamp ground is pulled towards, relative to sea level. Lower values put more of the swamp under water."),
             Newer(Number(SubBiomes, "ForestLowlandsShapingOffset", "Lowland forest shaping offset", 2, -100, 100, 0.5, 2, "world.biomes.postprocessing.main.forestLowlandsShapingOffset",
-                "Height offset used when shaping the lowland Black Forest variant's terrain."), NotPreviewed),
+                "Height offset used when shaping the lowland Black Forest variant's terrain.")),
             Newer(Number(SubBiomes, "ForestLowlandsShapingIntensity", "Lowland forest shaping intensity", 1.25, 0, 100, 0.25, 2, "world.biomes.postprocessing.main.forestLowlandsShapingIntensity",
-                "How strongly the lowland Black Forest variant's terrain is reshaped. Higher values make it stand out more from normal Black Forest."), NotPreviewed),
+                "How strongly the lowland Black Forest variant's terrain is reshaped. Higher values make it stand out more from normal Black Forest.")),
 
             Number(Terrain, "CliffIntensity", "Cliff intensity", 5, 0, 100, 0.5, 2, "rendering.renderer.cliffs.gradientMagnitude",
                 "How strongly steep slopes are sharpened into cliffs. Higher values make cliffs taller and more frequent; 0 leaves slopes smooth."),
@@ -271,10 +271,10 @@ namespace RiverheimConfig
             Number(Terrain, "PlainsShapingIntensity", "Plains shaping intensity", 0.5, 0, 100, 0.25, 2, "world.biomes.postprocessing.main.plainsShapingIntensity",
                 "How strongly Plains terrain is reshaped after biome placement. Higher values make Plains terrain more distinct from its surroundings."),
 
-            Number(Poles, "PolarOffset", "Polar belt offset (m)", 4000, 0, 100000, 250, 0, "world.polar.offset",
-                "Distance, in metres, that the centre of each polar belt (Ashlands south, Deep North north) sits beyond the world centre. Larger values push the poles further out."),
-            Number(Poles, "PolarRadius", "Polar belt radius (m)", 12000, 0, 100000, 250, 0, "world.polar.radius",
-                "Radius, in metres, of the circle each polar belt is cut from. Together with Polar belt offset this sets where Ashlands and Deep North begin; AtlasBuilder's HugeWorld preset rescales both."),
+            Number(Poles, "PolarOffset", "Polar belt offset (m)", 4000, 0, 100000, 100, 0, "world.polar.offset",
+                "Offset, in metres, of the circle each polar belt (Ashlands south, Deep North north) is cut from. The belts begin Polar belt radius minus this offset from the world centre, 8000 m by default, so larger values pull the poles inwards. Keep that distance at least 1000 m inside the world radius: a belt that only just reaches the world makes Riverheim fail to generate it. Moving it 1000 m or more beyond the world radius (0 with the default radius) removes both belts."),
+            Number(Poles, "PolarRadius", "Polar belt radius (m)", 12000, 0, 100000, 100, 0, "world.polar.radius",
+                "Radius, in metres, of the circle each polar belt is cut from. The belts begin Polar belt radius minus Polar belt offset from the world centre, 8000 m by default, so larger values push Ashlands and Deep North further out. Keep that distance at least 1000 m inside the world radius: a belt that only just reaches the world makes Riverheim fail to generate it, and 1000 m or more beyond the world radius removes both belts. AtlasBuilder's HugeWorld preset rescales both."),
             Number(Poles, "PolarNoiseAmplitude", "Polar edge waviness (m)", 400, 0, 100000, 50, 0, "world.polar.noiseAmplitude",
                 "How far the polar belt boundary wanders from a clean circle, in metres. 0 gives a smooth boundary."),
             Number(Poles, "PolarGapWidth", "Polar gap width (m)", 120, 0, 100000, 10, 0, "world.landmass.restrictions.main.polarGapWidth",

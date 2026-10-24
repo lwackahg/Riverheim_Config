@@ -8,7 +8,7 @@ A setting left at its default is not written, so Riverheim keeps its own value f
 
 | Setting | Default | Range | What it does |
 | --- | --- | --- | --- |
-| `WorldRadius` (World radius (m)) | 10500 | 1000 to 100000 | Radius of the world Riverheim generates, in metres. Keep 10500 and use Expand World Size stretching for a bigger or smaller world: biome bands scale with this value, but the poles, the landmass swirl and the rainfall pattern do not, so changing it distorts the layout. |
+| `WorldRadius` (World radius (m)) | 10500 | 1000 to 100000 | Radius of the world Riverheim generates, in metres. Keep 10500 and use Expand World Size stretching for a bigger or smaller world: biome bands scale with this value, but the poles, the landmass swirl and the rainfall pattern do not, so changing it distorts the layout. The polar belts begin 8000 m from the centre by default (see Polar belt radius) and must stay well inside this radius, or Riverheim fails to generate the world. |
 | `TileSpacing` (Tile spacing (m)) | 60 | 10 to 1000 | Distance between generation points in metres. Lower values add detail but take much longer, and river and lake counts grow with the number of points. |
 | `SeaFloorDepth` (Sea floor depth) | -40 | -1000 to 1000 | Height the sea floor settles to at the world edge and in the polar trenches, also used as the floor when shaping terrain. More negative values mean deeper edges and trenches. |
 | `OceanBiomeDepth` (Ocean biome depth) | -20 | -1000 to 1000 | Water must be deeper than this, and far enough from the coast, to count as the Ocean biome. More negative values mean fewer waters count as Ocean. |
@@ -59,7 +59,7 @@ A setting left at its default is not written, so Riverheim keeps its own value f
 | `PlainsWeight` (Plains amount) | 283 | 0 to 100000 | How much of the contested land Plains takes. Biomes claim land in proportion to these amounts, so raising one gives that biome more land within its bands. |
 | `MistlandsWeight` (Mistlands amount) | 305 | 0 to 100000 | How much of the contested land Mistlands takes. Biomes claim land in proportion to these amounts, so raising one gives that biome more land within its bands. |
 | `MarshWeight` (Marsh amount) | 5.5 | 0 to 100000 | How much of the contested land Marsh takes. Marsh is the rare, mostly submerged sub-biome of Meadows found next to water; the game treats it as Meadows. Raising this makes more marsh patches. |
-| `ForestLowlandsWeight` (Lowland Black Forest amount) | 2.5 | 0 to 100000 | How much of the contested land the lowland Black Forest variant takes. It only appears near spawn and prefers low ground close to water, to put tin within early reach. 0 turns it off. Added in Riverheim 1.1.1. AtlasBuilder 1.0.0 bundles an older Riverheim without this feature, so map previews ignore it. |
+| `ForestLowlandsWeight` (Lowland Black Forest amount) | 2.5 | 0 to 100000 | How much of the contested land the lowland Black Forest variant takes. It only appears near spawn and prefers low ground close to water, to put tin within early reach. 0 turns it off. |
 
 ## [6. Biome Bands] Biome bands (% of the way from spawn to the world edge)
 
@@ -83,7 +83,7 @@ A setting left at its default is not written, so Riverheim keeps its own value f
 | `SwirlStartRadius` (Swirl start radius (m)) | 5800 | 0 to 100000 | Distance from the centre, in metres, where the swirl arms begin to shape the land. Smaller values bring the swirl closer to spawn. |
 | `HarborRadius` (Harbor radius (m)) | 1700 | 0 to 100000 | Size of the sheltered water area Riverheim keeps near the centre of the world, in metres. 0 removes it (AtlasBuilder's Mini preset does this). |
 | `HarborCircularity` (Harbor circularity) | 0.045 | 0 to 10 | How round the central harbor area is kept. Higher values make it rounder. |
-| `SmallIslandSizeThreshold` (Remove islands below (tiles)) | 0 | 0 to 100000 | Landmasses with fewer generation tiles than this are removed. 0 keeps every island; Riverheim's Deep North region uses 220 to clear small ones. |
+| `SmallIslandSizeThreshold` (Remove islands below (m)) | 0 | 0 to 100000 | Landmasses smaller than about this many metres across are removed after painting. 0 keeps every island; Riverheim's own Deep North region uses 220 to clear small ones. |
 | `CoastalTrimDistance` (Coastal trim distance (m)) | 85 | 0 to 10000 | How far the coastline is trimmed back from the painted land edge, in metres. Higher values make landmasses a bit smaller with more irregular coasts. |
 | `IslandMergeThreshold` (Island merge threshold) | 0.25 | 0 to 10 | How readily neighbouring land partitions merge into one landmass. Lower values merge more. |
 
@@ -92,8 +92,8 @@ A setting left at its default is not written, so Riverheim keeps its own value f
 | Setting | Default | Range | What it does |
 | --- | --- | --- | --- |
 | `MountainScoreThreshold` (Mountain biome threshold) | 0.85 | 0 to 10 | How well high ground must score as mountain terrain before it becomes the Mountain biome. Lower values turn more high ground into Mountain. |
-| `MountainCutdownRatio` (Mountain cut-down ratio) | 0.88 | 0 to 1 | Share of height removed from mountain candidates Riverheim does not keep as mountains. Higher values flatten rejected mountains more. |
-| `MountainMinPatchSize` (Mountain min patch size) | 180 | 0 to 100000 | Smallest mountain area, in generation tiles, that is kept as a mountain. Higher values leave only the big ranges. |
+| `MountainCutdownRatio` (Mountain cut-down ratio) | 0.88 | 0 to 1 | Share of height taken off the mountain candidates Riverheim does not keep as mountains when it settles the terrain. Higher values flatten rejected mountains more; 0 leaves them standing. |
+| `MountainMinPatchSize` (Mountain min patch size) | 180 | 0 to 100000 | Mountain patches smaller than this are culled after settling. Higher values leave only the big ranges. |
 | `MountainSelectionRandomness` (Mountain selection randomness) | 4 | 0 to 1000 | Randomness in which mountain candidates are chosen. 0 always picks the best-scoring ones; higher values pick more freely. |
 | `MountainAreaScore` (Mountain area score) | 0.02 | -10 to 10 | How much a mountain candidate's area counts in its score. Higher values favour bigger mountain regions. |
 | `MountainEdgeTrim` (Mountain edge trim) | 20 | 0 to 1000 | How far mountain edges are trimmed back, in metres. Higher values make mountains smaller and steeper-sided. |
@@ -106,7 +106,7 @@ A setting left at its default is not written, so Riverheim keeps its own value f
 | `ChannelMeanderAmplitude` (Channel meander amplitude) | 0.75 | 0 to 100 | Strength of bends in channels, like Meander amplitude for rivers. |
 | `RainfallScale` (Rainfall pattern size (m)) | 1050 | 1 to 100000 | Size of the rainfall pattern that feeds rivers, in metres. Larger values make bigger wet and dry regions. |
 | `RainfallVariability` (Rainfall variability) | 1.9 | 0 to 100 | Contrast between wet and dry regions. Higher values make river sizes vary more across the world. |
-| `RainfallMinimum` (Rainfall minimum) | 0.05 | 0 to 10 | Lowest rainfall any tile gets. Higher values give dry regions more water, so more small rivers survive. |
+| `RainfallMinimum` (Rainfall minimum) | 0.05 | 0.001 to 10 | Lowest rainfall any tile gets. Higher values give dry regions more water, so more small rivers survive. Must stay above 0: at exactly 0 Riverheim fails to generate the world. |
 | `RainfallBasinContribution` (Basin contribution) | 0.7 | 0 to 10 | How much a river's drainage basin adds to its flow. Higher values make long rivers bigger. |
 | `SourceCuriosity` (River source features) | 0.1 | 0 to 100 | How notable river sources are. Notable spots attract lakes (Terrain interest pull) and local terrain features such as crags and ponds. |
 | `ConfluenceCuriosity` (River confluence features) | 1 | 0 to 100 | How notable places where rivers run close together are. Notable spots attract lakes and local terrain features. |
@@ -120,8 +120,8 @@ A setting left at its default is not written, so Riverheim keeps its own value f
 | `MistgladePatchSize` (Mistglade patch size) | 117 | 0 to 100000 | Size Mistglade patches aim for, in generation tiles. Larger values make fewer, bigger glades. |
 | `MarshBaseHeight` (Marsh base height) | -0.25 | -50 to 50 | Height marsh ground is pulled towards, relative to sea level. Lower values put more of the marsh under water. |
 | `SwampBaseHeight` (Swamp base height) | -0.25 | -50 to 50 | Height swamp ground is pulled towards, relative to sea level. Lower values put more of the swamp under water. |
-| `ForestLowlandsShapingOffset` (Lowland forest shaping offset) | 2 | -100 to 100 | Height offset used when shaping the lowland Black Forest variant's terrain. Added in Riverheim 1.1.1. AtlasBuilder 1.0.0 bundles an older Riverheim without this feature, so map previews ignore it. |
-| `ForestLowlandsShapingIntensity` (Lowland forest shaping intensity) | 1.25 | 0 to 100 | How strongly the lowland Black Forest variant's terrain is reshaped. Higher values make it stand out more from normal Black Forest. Added in Riverheim 1.1.1. AtlasBuilder 1.0.0 bundles an older Riverheim without this feature, so map previews ignore it. |
+| `ForestLowlandsShapingOffset` (Lowland forest shaping offset) | 2 | -100 to 100 | Height offset used when shaping the lowland Black Forest variant's terrain. |
+| `ForestLowlandsShapingIntensity` (Lowland forest shaping intensity) | 1.25 | 0 to 100 | How strongly the lowland Black Forest variant's terrain is reshaped. Higher values make it stand out more from normal Black Forest. |
 
 ## [11. Terrain] Terrain feel
 
@@ -140,8 +140,8 @@ A setting left at its default is not written, so Riverheim keeps its own value f
 
 | Setting | Default | Range | What it does |
 | --- | --- | --- | --- |
-| `PolarOffset` (Polar belt offset (m)) | 4000 | 0 to 100000 | Distance, in metres, that the centre of each polar belt (Ashlands south, Deep North north) sits beyond the world centre. Larger values push the poles further out. |
-| `PolarRadius` (Polar belt radius (m)) | 12000 | 0 to 100000 | Radius, in metres, of the circle each polar belt is cut from. Together with Polar belt offset this sets where Ashlands and Deep North begin; AtlasBuilder's HugeWorld preset rescales both. |
+| `PolarOffset` (Polar belt offset (m)) | 4000 | 0 to 100000 | Offset, in metres, of the circle each polar belt (Ashlands south, Deep North north) is cut from. The belts begin Polar belt radius minus this offset from the world centre, 8000 m by default, so larger values pull the poles inwards. Keep that distance at least 1000 m inside the world radius: a belt that only just reaches the world makes Riverheim fail to generate it. Moving it 1000 m or more beyond the world radius (0 with the default radius) removes both belts. |
+| `PolarRadius` (Polar belt radius (m)) | 12000 | 0 to 100000 | Radius, in metres, of the circle each polar belt is cut from. The belts begin Polar belt radius minus Polar belt offset from the world centre, 8000 m by default, so larger values push Ashlands and Deep North further out. Keep that distance at least 1000 m inside the world radius: a belt that only just reaches the world makes Riverheim fail to generate it, and 1000 m or more beyond the world radius removes both belts. AtlasBuilder's HugeWorld preset rescales both. |
 | `PolarNoiseAmplitude` (Polar edge waviness (m)) | 400 | 0 to 100000 | How far the polar belt boundary wanders from a clean circle, in metres. 0 gives a smooth boundary. |
 | `PolarGapWidth` (Polar gap width (m)) | 120 | 0 to 100000 | Width of the water gap kept between the main world's land and the polar belts, in metres. |
 | `PolarTrenchWidth` (Polar trench width (m)) | 220 | 0 to 100000 | Width of the deep trench along the polar belts, in metres, which drops to Sea floor depth. |
