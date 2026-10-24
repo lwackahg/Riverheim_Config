@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Test tool for Riverheim Config. Compiles the mod's RiverheimSettings.cs and checks it against a real
+       Riverheim.dll (or AtlasBuilder's Riverheim.Core.dll) without the game. See tests/README.md. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RollForward>Major</RollForward>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>rhconfig-test</AssemblyName>
+    <RootNamespace>RiverheimConfig.Tests</RootNamespace>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\RiverheimSettings.cs" Link="RiverheimSettings.cs" />
+  </ItemGroup>
+</Project>
