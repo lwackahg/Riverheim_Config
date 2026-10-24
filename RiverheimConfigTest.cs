@@ -123,9 +123,19 @@ namespace RiverheimConfig
                 return;
             }
 
-            new Harmony(PluginGuid).Patch(target, postfix: new HarmonyMethod(typeof(RiverheimConfigPlugin), nameof(PatchGenerationConfig)));
+            Harmony harmony = new Harmony(PluginGuid);
+            harmony.Patch(target, postfix: new HarmonyMethod(typeof(RiverheimConfigPlugin), nameof(PatchGenerationConfig)));
             patchApplied = true;
             log.LogInfo("Riverheim configuration patch applied. Server configuration is synchronized to clients.");
+
+            try
+            {
+                ExpandWorldSizeCompatibility.Apply(harmony, log);
+            }
+            catch (Exception exception)
+            {
+                log.LogError("Could not apply the Expand World Size stretch fix: " + exception);
+            }
         }
 
         // Riverheim calls this immediately before computing its generation pipeline. The result is a boxed

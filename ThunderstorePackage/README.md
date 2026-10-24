@@ -25,7 +25,7 @@ Every default is Riverheim 1.2.1's own value, and **a setting left at its defaul
 
 Every setting is enforced and synchronized by the server through ServerSync.
 
-**Bigger or smaller worlds:** keep `WorldRadius` at 10500 and use Expand World Size stretching (Stretch world = Stretch biomes, and EWS World radius + World edge size = 10500 x stretch). Changing `WorldRadius` scales the biome bands but not the poles, the landmass swirl or the rainfall pattern, so it distorts the layout.
+**Bigger or smaller worlds:** keep `WorldRadius` at 10500 and use Expand World Size stretching (this mod fixes Riverheim's forests, vegetation and forest-bound locations in stretched worlds, which were missing beyond about 10 km) (Stretch world = Stretch biomes, and EWS World radius + World edge size = 10500 x stretch). Changing `WorldRadius` scales the biome bands but not the poles, the landmass swirl or the rainfall pattern, so it distorts the layout.
 
 ## Installation
 

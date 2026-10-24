@@ -29,6 +29,7 @@
   <ItemGroup>
     <Compile Include="RiverheimConfigTest.cs" />
     <Compile Include="RiverheimSettings.cs" />
+    <Compile Include="ExpandWorldSizeCompatibility.cs" />
     <!-- ServerSync is compiled in rather than shipped as ServerSync.dll, so another mod's (possibly outdated)
          ServerSync.dll can never be loaded in its place. -->
     <Compile Include="ThirdParty\ServerSync\ConfigSync.cs" />

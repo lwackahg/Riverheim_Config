@@ -12,7 +12,7 @@ $outputZip = Join-Path $releasesDir "$packageName-$version.zip"
 $packageDir = "ThunderstorePackage"
 # The source files shipped in the package are the repository's own; SourceCode/ only holds the README for them.
 # Source files shipped in the package, at the same relative paths as in the repository (the .csproj expects them there).
-$sourceFiles = @("RiverheimConfigTest.cs", "RiverheimSettings.cs", "RiverheimConfigTest.csproj", "ThirdParty\ServerSync\ConfigSync.cs", "ThirdParty\ServerSync\LICENSE.txt")
+$sourceFiles = @("RiverheimConfigTest.cs", "RiverheimSettings.cs", "ExpandWorldSizeCompatibility.cs", "RiverheimConfigTest.csproj", "ThirdParty\ServerSync\ConfigSync.cs", "ThirdParty\ServerSync\LICENSE.txt")
 
 # Ensure Releases folder exists
 if (-not (Test-Path $releasesDir)) {
