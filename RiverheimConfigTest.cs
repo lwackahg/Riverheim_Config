@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 
 namespace RiverheimConfig
@@ -25,6 +26,7 @@ namespace RiverheimConfig
         private static ConfigSync configSync;
         private static bool patchApplied;
         private static readonly Dictionary<string, ConfigEntryBase> entries = new Dictionary<string, ConfigEntryBase>();
+        private FileSystemWatcher watcher;
 
         private void Awake()
         {
@@ -37,6 +39,44 @@ namespace RiverheimConfig
             };
 
             BindConfiguration();
+            WatchConfigFile();
+        }
+
+        // BepInEx only reads the config file at start-up. Watching it means a change saved in a text editor while the
+        // game runs takes effect for the next world that is created or loaded, without restarting the game.
+        // (Changes made in an in-game configuration manager already apply directly.)
+        private void WatchConfigFile()
+        {
+            try
+            {
+                watcher = new FileSystemWatcher(Path.GetDirectoryName(Config.ConfigFilePath), Path.GetFileName(Config.ConfigFilePath));
+                watcher.Changed += OnConfigFileChanged;
+                watcher.Created += OnConfigFileChanged;
+                watcher.Renamed += OnConfigFileChanged;
+                watcher.SynchronizingObject = ThreadingHelper.SynchronizingObject;
+                watcher.EnableRaisingEvents = true;
+            }
+            catch (Exception exception)
+            {
+                log.LogWarning("Could not watch the config file for changes; restart the game after editing it. " + exception.Message);
+            }
+        }
+
+        private void OnConfigFileChanged(object sender, FileSystemEventArgs args)
+        {
+            if (!File.Exists(Config.ConfigFilePath))
+            {
+                return;
+            }
+            try
+            {
+                Config.Reload();
+                log.LogInfo("Config file reloaded. The new values apply to the next world you create or load.");
+            }
+            catch (Exception exception)
+            {
+                log.LogError("Could not reload the config file: " + exception.Message);
+            }
         }
 
         // BepInEx loads plugins in directory order. Riverheim Config can therefore Awake before
@@ -123,6 +163,11 @@ namespace RiverheimConfig
 
         private void OnDestroy()
         {
+            if (watcher != null)
+            {
+                watcher.Dispose();
+                watcher = null;
+            }
             if (patchApplied)
             {
                 new Harmony(PluginGuid).UnpatchSelf();

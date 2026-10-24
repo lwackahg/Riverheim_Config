@@ -34,12 +34,14 @@ Every setting is enforced and synchronized by the server through ServerSync.
 3. Install this mod on the server and every client.
 4. Start once to create `BepInEx/config/com.valheim.riverheim.config.cfg`, then edit that file on the server, or write it with the AtlasBuilder UI's **Export config**.
 
+**Changing settings without restarting:** the mod notices when the config file is saved, on a server or a client, and uses the new values for the next world that is created or loaded. A world that is already running keeps its terrain until it is loaded again. In single player you can also edit every setting from inside the game with a configuration manager (the F1 menu, for example *Azu's UnOfficial ConfigManager*); it shows each setting's description and allowed range. On a server, the server's file wins: it is sent to every player who joins.
+
 ## Important
 
 - Riverheim terrain generation must match between server and clients. Keep Riverheim and this mod at identical versions across the group.
 - Changes apply whenever Riverheim generates terrain, to every world. Treat a configuration change as a new-world decision; do not change it for an established world without a tested backup. (Riverheim stores only its preset name and version in a world, not these values, so the mod cannot keep per-world settings yet. See `docs/preset-handler-notes.md` in the repository.)
 - Config files from Riverheim Config 2.0.0 keep working; the new sections are added with their defaults. `ForestWeight`'s default moved from 261 to 258.5 because Riverheim 1.1.1 gave 2.5 of it to the new lowland Black Forest variant; a 2.0.0 file that still says 261 will now force 261.
-- AtlasBuilder 1.0.0 bundles a Riverheim from before 1.1.1, so the AtlasBuilder UI's previews ignore the lowland Black Forest settings (`ForestLowlandsWeight`, `ForestLowlandsShaping*`) for now. The mod applies them in game, and its own tests render them with Riverheim 1.2.1.
+- AtlasBuilder 1.0.0 bundles a Riverheim from before 1.1.1. The AtlasBuilder UI's **Installed** Riverheim choice draws with your own Riverheim instead, so its previews match the game, including the lowland Black Forest settings (`ForestLowlandsWeight`, `ForestLowlandsShaping*`); with its **Bundled** choice those settings do nothing.
 - This mod only exposes settings that map to real Riverheim 1.2 configuration fields, and each one was checked to visibly change a map of a test seed drawn by Riverheim 1.2.1 itself (run inside AtlasBuilder). Descriptions say what the field does as far as it is understood; the AtlasBuilder UI is the way to see what a value does to your seed.
 - Two things make Riverheim throw an error instead of generating a world, which the mod cannot prevent for you: `RainfallMinimum` at exactly 0 (the lowest allowed value is now 0.001), and polar belts that only just reach into the world (`PolarRadius - PolarOffset` within about 1000 m of `WorldRadius`; the default is 8000 m against 10500 m). The descriptions say so. What the game shows when that happens was not tested; AtlasBuilder aborts.
 
