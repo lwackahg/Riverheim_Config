@@ -245,7 +245,7 @@ function Render {
     $image = Get-ChildItem -LiteralPath $folder -Filter '*.png' -File | Select-Object -First 1
     if ($process.ExitCode -ne 0 -or $null -eq $image) {
         # The first real exception line; the full output stays in stderr.log next to the render.
-        $cause = @($stderr -split "`r?`n" | Where-Object { $_ -match 'Exception' -and $_ -notmatch 'AggregateException|TargetInvocationException|Unhandled exception\. ' } | Select-Object -First 1)
+        $cause = @($stderr -split "`r?`n" | Where-Object { $_ -match 'Exception' -and $_ -notmatch 'AggregateException|TargetInvocationException|Unhandled exception\. |Failed to generate world' } | Select-Object -First 1)
         $summary = if ($cause.Count -gt 0) { $cause[0].Trim() } elseif ($stderr) { ($stderr -split "`r?`n")[0] } else { 'no output' }
         return [pscustomobject]@{ Name = $Name; Hash = $null; Image = $null; Error = "AtlasBuilder exit code $($process.ExitCode): $summary" }
     }
@@ -355,8 +355,8 @@ if ($Tests -contains 'Reference') {
         $referenceHash = Join-Path $referenceDir "BEST_$($Seeds[0])_$mode.sha256"
         if ($UpdateReference -or -not (Test-Path -LiteralPath $referenceHash)) {
             Copy-Item -LiteralPath $r.Image -Destination $referenceImage -Force
-            Set-Content -LiteralPath $referenceHash -Value "$($r.Hash) $coreLabel" -Encoding ASCII
-            Say "   seed $($Seeds[0]) ${mode}: reference written ($($r.Hash.Substring(0, 12)), $coreLabel)"
+            Set-Content -LiteralPath $referenceHash -Value "$($r.Hash) $Engine Riverheim $coreVersion" -Encoding ASCII
+            Say "   seed $($Seeds[0]) ${mode}: reference written ($($r.Hash.Substring(0, 12)), $Engine Riverheim $coreVersion)"
         } else {
             $expected = ((Get-Content -LiteralPath $referenceHash -Raw).Trim() -split ' ')[0]
             if ($expected -eq $r.Hash) { Say "   seed $($Seeds[0]) ${mode}: IDENTICAL to reference (pass)" }
