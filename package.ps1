@@ -10,9 +10,10 @@ $version = $manifest.version_number
 $releasesDir = "Releases"
 $outputZip = Join-Path $releasesDir "$packageName-$version.zip"
 $packageDir = "ThunderstorePackage"
-# The source files shipped in the package are the repository's own; SourceCode/ only holds the README for them.
-# Source files shipped in the package, at the same relative paths as in the repository (the .csproj expects them there).
-$sourceFiles = @("RiverheimConfigTest.cs", "RiverheimSettings.cs", "ExpandWorldSizeCompatibility.cs", "RiverheimConfigTest.csproj", "ThirdParty\ServerSync\ConfigSync.cs", "ThirdParty\ServerSync\LICENSE.txt")
+# Source files shipped in the package's SourceCode folder, at their paths inside src\ (the .csproj expects them there).
+$sourceDir = "src"
+$sourceFiles = @("README.md", "RiverheimConfigTest.cs", "RiverheimSettings.cs", "ExpandWorldSizeCompatibility.cs", "RiverheimConfigTest.csproj", "ThirdParty\ServerSync\ConfigSync.cs", "ThirdParty\ServerSync\LICENSE.txt")
+$pluginDll = "src\bin\Release\RiverheimConfigTest.dll"
 
 # Ensure Releases folder exists
 if (-not (Test-Path $releasesDir)) {
@@ -26,7 +27,7 @@ $requiredFiles = @(
     "$packageDir\manifest.json",
     "$packageDir\README.md",
     "$packageDir\icon.png",
-    "bin\Release\RiverheimConfigTest.dll"
+    $pluginDll
 )
 
 $missing = @()
@@ -41,13 +42,13 @@ if ($missing.Count -gt 0) {
     $missing | ForEach-Object { Write-Host "  - $_" -ForegroundColor Red }
     Write-Host ""
     Write-Host "Please ensure:" -ForegroundColor Yellow
-    Write-Host "  1. You have built the project (dotnet msbuild /t:Rebuild /p:Configuration=Release)" -ForegroundColor Yellow
+    Write-Host "  1. You have built the project (dotnet msbuild src\RiverheimConfigTest.csproj -t:Rebuild -p:Configuration=Release)" -ForegroundColor Yellow
     Write-Host "  2. You have created icon.png in ThunderstorePackage folder (256x256 PNG)" -ForegroundColor Yellow
     exit 1
 }
 
 # The plugin version must match the manifest.
-$pluginVersion = (Select-String -Path "RiverheimConfigTest.cs" -Pattern 'PluginVersion = "([^"]+)"').Matches[0].Groups[1].Value
+$pluginVersion = (Select-String -Path "src\RiverheimConfigTest.cs" -Pattern 'PluginVersion = "([^"]+)"').Matches[0].Groups[1].Value
 if ($pluginVersion -ne $version) {
     Write-Host "ERROR: manifest.json says $version but RiverheimConfigTest.cs says PluginVersion $pluginVersion" -ForegroundColor Red
     exit 1
@@ -70,7 +71,7 @@ Copy-Item "$packageDir\icon.png" $tempDir
 # Place the plugin DLL under BepInEx/plugins to support auto-install by mod managers (ServerSync is compiled into it)
 $pluginsDir = Join-Path $tempDir "BepInEx\plugins"
 New-Item -ItemType Directory -Path $pluginsDir -Force | Out-Null
-Copy-Item "bin\Release\RiverheimConfigTest.dll" (Join-Path $pluginsDir "RiverheimConfigTest.dll")
+Copy-Item $pluginDll (Join-Path $pluginsDir "RiverheimConfigTest.dll")
 
 # Include source code
 Write-Host "Including source code..." -ForegroundColor Green
@@ -79,9 +80,8 @@ New-Item -ItemType Directory -Path $sourceZipDir | Out-Null
 foreach ($sourceFile in $sourceFiles) {
     $target = Join-Path $sourceZipDir $sourceFile
     New-Item -ItemType Directory -Path (Split-Path -Parent $target) -Force | Out-Null
-    Copy-Item $sourceFile $target
+    Copy-Item (Join-Path $sourceDir $sourceFile) $target
 }
-Copy-Item "SourceCode\README.md" $sourceZipDir
 
 # Create zip file
 Write-Host "Creating zip file..." -ForegroundColor Green

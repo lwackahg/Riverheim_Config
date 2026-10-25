@@ -61,7 +61,7 @@ $outDir = Join-Path $PSScriptRoot 'out'
 $referenceDir = Join-Path $PSScriptRoot 'reference'
 $toolProject = Join-Path $PSScriptRoot 'RiverheimConfig.Tests\RiverheimConfig.Tests.csproj'
 $toolDll = Join-Path $PSScriptRoot 'RiverheimConfig.Tests\bin\Release\net8.0\rhconfig-test.dll'
-$settingsSource = Join-Path $repoRoot 'RiverheimSettings.cs'
+$settingsSource = Join-Path $repoRoot 'src\RiverheimSettings.cs'
 $depsHookSource = Join-Path $PSScriptRoot 'DepsHook.cs'
 $invariant = [System.Globalization.CultureInfo]::InvariantCulture
 

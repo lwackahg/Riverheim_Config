@@ -54,7 +54,7 @@ Every setting is enforced and synchronized by the server through ServerSync.
 ## Build and test
 
 ```powershell
-dotnet msbuild RiverheimConfigTest.csproj /t:Rebuild /p:Configuration=Release
+dotnet msbuild src\RiverheimConfigTest.csproj -t:Rebuild -p:Configuration=Release
 dotnet build tests\RiverheimConfig.Tests -c Release
 dotnet tests\RiverheimConfig.Tests\bin\Release\net8.0\rhconfig-test.dll check Gurebu-Riverheim\Riverheim.dll
 .\tests\Run-AtlasTests.ps1

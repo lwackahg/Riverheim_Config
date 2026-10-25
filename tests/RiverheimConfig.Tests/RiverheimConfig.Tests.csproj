@@ -17,7 +17,7 @@
     <MonoCecilDir Condition=" '$(MonoCecilDir)' == '' and Exists('$(MSBuildThisFileDirectory)..\..\bin\Release\Mono.Cecil.dll') ">$(MSBuildThisFileDirectory)..\..\bin\Release</MonoCecilDir>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\RiverheimSettings.cs" Link="RiverheimSettings.cs" />
+    <Compile Include="..\..\src\RiverheimSettings.cs" Link="RiverheimSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Cecil">
