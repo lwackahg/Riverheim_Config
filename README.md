@@ -1,6 +1,6 @@
 # Riverheim Config
 
-Server-synchronized world-generation controls for **Gurebu-Riverheim 1.2.x**.
+Server-synchronized world-generation controls for [Gurebu's Riverheim](https://thunderstore.io/c/valheim/p/Gurebu/Riverheim/) 1.2.x.
 
 Riverheim itself has no player-facing options. This companion mod adds a config file for the parts of Riverheim's world generation that are safe to turn: world size and depths, rivers, lakes, biome placement and amounts, biome bands, landmass shape, mountains, river features, sub-biomes and terrain feel. Settings are applied at Riverheim's `ConfigManager.GetConfig` entry point, immediately before a world is generated.
 
@@ -29,9 +29,9 @@ Every setting is enforced and synchronized by the server through ServerSync.
 ## Installation
 
 1. Install `denikson-BepInExPack_Valheim` 5.4.2202 or newer.
-2. Install `Gurebu-Riverheim` 1.2.x on the server and every client.
+2. Install [Riverheim](https://thunderstore.io/c/valheim/p/Gurebu/Riverheim/) (Gurebu-Riverheim) 1.2.x on the server and every client.
 3. Install this mod on the server and every client.
-4. Start once to create `BepInEx/config/com.valheim.riverheim.config.cfg`, then edit that file on the server, or write it with the AtlasBuilder UI's **Export config**.
+4. Start once to create `BepInEx/config/com.valheim.riverheim.config.cfg`, then edit that file on the server, or write it with the [AtlasBuilder UI](https://github.com/lwackahg/atlasbuilder-ui-repo)'s **Export config**.
 
 **Changing settings without restarting:** the mod notices when the config file is saved, on a server or a client, and uses the new values for the next world that is created or loaded. A world that is already running keeps its terrain until it is loaded again. In single player you can also edit every setting from inside the game with a configuration manager (the F1 menu, for example *Azu's UnOfficial ConfigManager*); it shows each setting's description and allowed range. On a server, the server's file wins: it is sent to every player who joins.
 
