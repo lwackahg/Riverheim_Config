@@ -1,6 +1,14 @@
 # Riverheim Config - Changelog
 
+## [3.0.1] - 2026-10-25
+
+- Recommended presets: 8 gentle and 9 wild ones are listed in the README, and 13 wild presets are new in `presets/wild` (Great Rivers, Inland Sea, Grand Harbor, Atoll, Canyonlands, The Alps, Meadow Empire, Stardust, Shard Sea, Twin Coil, Island Chains, Shattered, Biome Chaos). Each generated on seeds 400 and 1337 with Riverheim 1.2.1.
+- Corrected the upgrade notes: the previous release was 1.0.4, not 2.0.0.
+- Plays with 3.0.0: world generation is unchanged, so 3.0.0 and 3.0.1 players and servers can mix.
+
 ## [3.0.0] - 2026-10-24
+
+The first release since 1.0.4. It includes the never-released 2.0.0 rewrite for Riverheim 1.1 below.
 
 ### For Gurebu-Riverheim 1.2.x, with many more controls
 
@@ -20,11 +28,10 @@
 
 ### Migration
 
-- 2.0.0 config files keep working. New sections are added with their defaults the first time the game starts.
-- A 2.0.0 file that still contains `ForestWeight = 261` now forces 261 instead of leaving Riverheim's 258.5; set it to 258.5 to get the stock amount.
+- Config files from 1.0.x do not carry over: 1.0.x was made for Riverheim 0.12, whose settings no longer exist. Old entries stay in the file and do nothing.
 - As before, these settings apply to every world Riverheim generates while the mod is installed, so a changed config changes existing worlds. See `docs/preset-handler-notes.md` for why per-world settings are not possible with Riverheim 1.2.1.
 
-## [2.0.0] - 2026-09-14
+## [2.0.0] - not released (included in 3.0.0)
 
 ### Breaking: rebuilt for Gurebu-Riverheim 1.1.x
 

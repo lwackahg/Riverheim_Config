@@ -35,11 +35,44 @@ Every setting is enforced and synchronized by the server through ServerSync.
 
 **Changing settings without restarting:** the mod notices when the config file is saved, on a server or a client, and uses the new values for the next world that is created or loaded. A world that is already running keeps its terrain until it is loaded again. In single player you can also edit every setting from inside the game with a configuration manager (the F1 menu, for example *Azu's UnOfficial ConfigManager*); it shows each setting's description and allowed range. On a server, the server's file wins: it is sent to every player who joins.
 
+## Recommended presets
+
+Ready-made settings in the `presets` folder of the [repository](https://github.com/lwackahg/Riverheim_Config/tree/main/presets). Copy one over `BepInEx/config/com.valheim.riverheim.config.cfg`, or pick it from the AtlasBuilder UI's **Import config** menu to see your seed first. Every one was generated on several seeds with Riverheim 1.2.1 and keeps all progression biomes.
+
+**Gentle**, close to normal Riverheim with one clear theme:
+
+| Preset | What you get |
+| --- | --- |
+| [Pangaea](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/Pangaea.cfg) | one huge supercontinent, long overland journeys |
+| [Archipelago](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/Archipelago.cfg) | scattered islands, a sailing world |
+| [RiverKingdom](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/RiverKingdom.cfg) | many wide, winding rivers and channels |
+| [Lakelands](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/Lakelands.cfg) | lakes everywhere, in lake districts |
+| [Highlands](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/Highlands.cfg) | big mountain ranges and steeper land |
+| [GentleLowlands](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/GentleLowlands.cfg) | broad flat lowlands and a big gentle start |
+| [LongJourney](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/LongJourney.cfg) | biome bands pushed outwards, a slow and gentle start |
+| [ShortJourney](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/ShortJourney.cfg) | biome bands pulled in, harder biomes come early |
+
+**Wild**, far from stock Riverheim:
+
+| Preset | What you get |
+| --- | --- |
+| [GreatRivers](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/wild/GreatRivers.cfg) | a supercontinent cut by a few huge, looping Amazon-style rivers |
+| [InlandSea](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/wild/InlandSea.cfg) | a supercontinent around a vast central sea, laced with channels |
+| [GrandHarbor](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/wild/GrandHarbor.cfg) | a huge round sea at the centre, land wrapped around it |
+| [Atoll](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/wild/Atoll.cfg) | one central island in open sea with scattered islets |
+| [Canyonlands](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/wild/Canyonlands.cfg) | swamp-heavy land slashed by wide channels |
+| [TheAlps](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/wild/TheAlps.cfg) | about a third of all land is Mountain |
+| [MeadowEmpire](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/wild/MeadowEmpire.cfg) | Meadows cover a third of the land |
+| [Stardust](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/wild/Stardust.cfg) | countless thin spiral arms of small islands |
+| [BiomeChaos](https://github.com/lwackahg/Riverheim_Config/blob/main/presets/wild/BiomeChaos.cfg) | every biome anywhere, even next to spawn (hard start) |
+
+`presets/Defaults.cfg` lists every setting at Riverheim's own value.
+
 ## Important
 
 - Riverheim terrain generation must match between server and clients. Keep Riverheim and this mod at identical versions across the group.
 - Changes apply whenever Riverheim generates terrain, to every world. Treat a configuration change as a new-world decision; do not change it for an established world without a tested backup. (Riverheim stores only its preset name and version in a world, not these values, so the mod cannot keep per-world settings yet. See `docs/preset-handler-notes.md` in the repository.)
-- Config files from Riverheim Config 2.0.0 keep working; the new sections are added with their defaults. `ForestWeight`'s default moved from 261 to 258.5 because Riverheim 1.1.1 gave 2.5 of it to the new lowland Black Forest variant; a 2.0.0 file that still says 261 will now force 261.
+- Coming from 1.0.4, the previous release: it was made for Riverheim 0.12, whose settings no longer exist, so 3.0 writes a fresh set of sections and the old 1.0.x entries do nothing. Start from `presets/Defaults.cfg` or one of the presets below.
 - AtlasBuilder 1.0.0 bundles a Riverheim from before 1.1.1. The AtlasBuilder UI's **Installed** Riverheim choice draws with your own Riverheim instead, so its previews match the game, including the lowland Black Forest settings (`ForestLowlandsWeight`, `ForestLowlandsShaping*`); with its **Bundled** choice those settings do nothing.
 - This mod only exposes settings that map to real Riverheim 1.2 configuration fields, and each one was checked to visibly change a map of a test seed drawn by Riverheim 1.2.1 itself (run inside AtlasBuilder). Descriptions say what the field does as far as it is understood; the AtlasBuilder UI is the way to see what a value does to your seed.
 - Some values make Riverheim throw an error instead of generating a world, so the mod refuses them: `RainfallMinimum` at exactly 0 (the lowest allowed value is 0.001), `MinWidth` below 2 (at 0 Riverheim runs out of memory; the lowest allowed value is 3), and a `WorldRadius` from 7800 to 9000 m, where the world edge runs into the Ashlands and Deep North belts (the mod keeps Riverheim's own radius and logs why). The descriptions say so. What the game shows when that happens was not tested; AtlasBuilder aborts.

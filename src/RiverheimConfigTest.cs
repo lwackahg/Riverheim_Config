@@ -19,7 +19,9 @@ namespace RiverheimConfig
     {
         private const string PluginGuid = "com.valheim.riverheim.config";
         private const string PluginName = "Riverheim Config";
-        private const string PluginVersion = "3.0.0";
+        private const string PluginVersion = "3.0.1";
+        // Oldest version this one can play with: generation is identical since 3.0.0, so 3.0.x players and servers mix.
+        private const string MinimumCompatibleVersion = "3.0.0";
         private const string RiverheimConfigMethod = "Riverheim.Configuration.ConfigManager:GetConfig";
 
         private static ManualLogSource log;
@@ -35,7 +37,7 @@ namespace RiverheimConfig
             {
                 DisplayName = PluginName,
                 CurrentVersion = PluginVersion,
-                MinimumRequiredVersion = PluginVersion
+                MinimumRequiredVersion = MinimumCompatibleVersion
             };
 
             BindConfiguration();

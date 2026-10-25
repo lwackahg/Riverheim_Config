@@ -1,6 +1,6 @@
 {
     "name": "Riverheim_Config",
-    "version_number": "3.0.0",
+    "version_number": "3.0.1",
     "website_url": "https://github.com/lwackahg/Riverheim_Config",
     "description": "Server-synchronized world-generation controls for Gurebu-Riverheim 1.2.x: world, rivers, lakes, biomes, landmass, mountains and terrain. Preview them in the AtlasBuilder UI.",
     "dependencies": [
