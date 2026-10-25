@@ -102,7 +102,7 @@
       "path": "common.startingAreaRadius",
       "optional": false,
       "previewNote": null,
-      "description": "Size of the gentle area around spawn in metres, where hills are shaped like flatland. Larger values make a bigger gentle start."
+      "description": "Size of the gentle area around spawn in metres, where hills are shaped like flatland. Larger values make a bigger gentle start; below about 400 there is no gentle area, the same as 0."
     },
     {
       "section": "2. Rivers",
@@ -117,7 +117,7 @@
       "path": "world.rivers.origins.main.density",
       "optional": false,
       "previewNote": null,
-      "description": "Share of suitable coastline tiles that become river mouths. Higher values make more rivers; 0 turns rivers off."
+      "description": "Share of suitable coastline tiles that become river mouths. Higher values make more rivers, up to about 0.5, where every suitable spot is used; 0 turns rivers off."
     },
     {
       "section": "2. Rivers",
@@ -192,7 +192,7 @@
       "path": "world.rivers.prune.main.minStrahler",
       "optional": false,
       "previewNote": null,
-      "description": "River branches below this Strahler order are removed. Higher values keep only the bigger branches."
+      "description": "River branches below this Strahler order are removed. Higher values keep only the bigger branches; with the default Min river width, 1 removes nothing more than 2 does."
     },
     {
       "section": "2. Rivers",
@@ -200,14 +200,14 @@
       "label": "Min river width (m)",
       "default": 14.5,
       "integer": false,
-      "min": 0,
+      "min": 3,
       "max": 1000,
       "step": 0.5,
       "decimals": 1,
       "path": "world.rivers.prune.main.minWidth",
       "optional": false,
       "previewNote": null,
-      "description": "River segments narrower than this are removed. Higher values drop thin streams."
+      "description": "River segments narrower than this are removed. Higher values drop thin streams. The lowest allowed value is 3: at 1 Riverheim fails to generate the world, and at 0 it keeps every trickle and runs out of memory."
     },
     {
       "section": "2. Rivers",
@@ -222,7 +222,7 @@
       "path": "world.rivers.prune.main.maxWidthDiff",
       "optional": false,
       "previewNote": null,
-      "description": "Where rivers join, a side branch is removed if the widest incoming branch is more than this many times wider. Higher values keep more small tributaries; 0 keeps them all."
+      "description": "Where rivers join, a side branch is removed if the widest incoming branch is more than this many times wider. Higher values keep more small tributaries; from about 5 up they are all kept, the same as 0."
     },
     {
       "section": "2. Rivers",
@@ -297,7 +297,7 @@
       "path": "world.height.lakes.main.affinity.kFlatland",
       "optional": false,
       "previewNote": null,
-      "description": "How strongly lakes prefer flat lowland."
+      "description": "How strongly lakes prefer flat lowland. Above about 1 it makes no further difference; negative values push lakes away from lowland."
     },
     {
       "section": "3. Lakes",
@@ -642,7 +642,7 @@
       "path": "world.landmass.restrictions.main.swirl.exponent",
       "optional": false,
       "previewNote": null,
-      "description": "How quickly the swirl arms wind round as they go outwards. Higher values twist the arms more."
+      "description": "How quickly the swirl arms wind round as they go outwards. Higher values twist the arms more; 1 or less turns the swirl off, leaving land in large round masses."
     },
     {
       "section": "7. Landmass",
@@ -657,7 +657,7 @@
       "path": "world.landmass.restrictions.main.swirl.startRadius",
       "optional": false,
       "previewNote": null,
-      "description": "Distance from the centre, in metres, where the swirl arms begin to shape the land. Smaller values bring the swirl closer to spawn."
+      "description": "Distance from the centre, in metres, where the swirl arms begin to shape the land. Smaller values bring the swirl closer to spawn; beyond the world radius there is no swirl at all."
     },
     {
       "section": "7. Landmass",
@@ -687,7 +687,7 @@
       "path": "world.landmass.restrictions.main.harbor.circularity",
       "optional": false,
       "previewNote": null,
-      "description": "How round the central harbor area is kept. Higher values make it rounder."
+      "description": "How round the central harbor area is kept. Higher values make it rounder; 0 removes the harbor, like Harbor radius 0."
     },
     {
       "section": "7. Landmass",
@@ -747,7 +747,7 @@
       "path": "world.biomes.conditionalPlacement.main.mountainScoreThreshold",
       "optional": false,
       "previewNote": null,
-      "description": "How well high ground must score as mountain terrain before it becomes the Mountain biome. Lower values turn more high ground into Mountain."
+      "description": "How well high ground must score as mountain terrain before it becomes the Mountain biome. Lower values turn more high ground into Mountain; above 1 nothing qualifies and the world has no Mountain biome."
     },
     {
       "section": "8. Mountains",
@@ -762,7 +762,7 @@
       "path": "world.height.settlement.main.mountainCutdownRatio",
       "optional": false,
       "previewNote": null,
-      "description": "Share of height taken off the mountain candidates Riverheim does not keep as mountains when it settles the terrain. Higher values flatten rejected mountains more; 0 leaves them standing."
+      "description": "Share of height taken off the mountain candidates Riverheim does not keep as mountains when it settles the terrain. Higher values flatten rejected mountains more; values up to about 0.5 look the same as 0, which leaves them standing."
     },
     {
       "section": "8. Mountains",

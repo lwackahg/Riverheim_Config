@@ -13,20 +13,20 @@ A setting left at its default is not written, so Riverheim keeps its own value f
 | `SeaFloorDepth` (Sea floor depth) | -40 | -1000 to 1000 | Height the sea floor settles to at the world edge and in the polar trenches, also used as the floor when shaping terrain. More negative values mean deeper edges and trenches. |
 | `OceanBiomeDepth` (Ocean biome depth) | -20 | -1000 to 1000 | Water must be deeper than this, and far enough from the coast, to count as the Ocean biome. More negative values mean fewer waters count as Ocean. |
 | `MountainHeight` (Mountain height) | 50 | -1000 to 1000 | Height Riverheim treats as mountain level when shaping terrain and scoring which high ground becomes the Mountain biome. Lower values make more mountains. |
-| `StartingAreaRadius` (Starting area (m)) | 870 | 0 to 10000 | Size of the gentle area around spawn in metres, where hills are shaped like flatland. Larger values make a bigger gentle start. |
+| `StartingAreaRadius` (Starting area (m)) | 870 | 0 to 10000 | Size of the gentle area around spawn in metres, where hills are shaped like flatland. Larger values make a bigger gentle start; below about 400 there is no gentle area, the same as 0. |
 
 ## [2. Rivers] Rivers
 
 | Setting | Default | Range | What it does |
 | --- | --- | --- | --- |
-| `OriginDensity` (River origin density) | 0.25 | 0 to 1 | Share of suitable coastline tiles that become river mouths. Higher values make more rivers; 0 turns rivers off. |
+| `OriginDensity` (River origin density) | 0.25 | 0 to 1 | Share of suitable coastline tiles that become river mouths. Higher values make more rivers, up to about 0.5, where every suitable spot is used; 0 turns rivers off. |
 | `MinLandNeighbors` (Min land neighbours) | 2 | 0 to 8, whole number | Land tiles a coastline tile needs next to it to start a river. Higher values keep river mouths off thin peninsulas and small islands. |
 | `WidthScale` (Width scale) | 140 | 0 to 10000 | River width = WidthScale x flow ^ WidthPower + WidthOffset, never below zero. Scales every river's width. |
 | `WidthPower` (Width power) | 0.4 | 0 to 10 | How strongly river width grows with water flow. Higher values make big rivers much wider than small streams. |
 | `WidthOffset` (Width offset) | -6 | -1000 to 1000 | Added to every river width. Negative values thin out small streams. |
-| `MinStrahler` (Min Strahler order) | 2 | 1 to 20, whole number | River branches below this Strahler order are removed. Higher values keep only the bigger branches. |
-| `MinWidth` (Min river width (m)) | 14.5 | 0 to 1000 | River segments narrower than this are removed. Higher values drop thin streams. |
-| `MaxWidthDifference` (Max tributary ratio) | 2.2 | 0 to 1000 | Where rivers join, a side branch is removed if the widest incoming branch is more than this many times wider. Higher values keep more small tributaries; 0 keeps them all. |
+| `MinStrahler` (Min Strahler order) | 2 | 1 to 20, whole number | River branches below this Strahler order are removed. Higher values keep only the bigger branches; with the default Min river width, 1 removes nothing more than 2 does. |
+| `MinWidth` (Min river width (m)) | 14.5 | 3 to 1000 | River segments narrower than this are removed. Higher values drop thin streams. The lowest allowed value is 3: at 1 Riverheim fails to generate the world, and at 0 it keeps every trickle and runs out of memory. |
+| `MaxWidthDifference` (Max tributary ratio) | 2.2 | 0 to 1000 | Where rivers join, a side branch is removed if the widest incoming branch is more than this many times wider. Higher values keep more small tributaries; from about 5 up they are all kept, the same as 0. |
 | `MeanderPeriod` (Meander period) | 3.4 | 0 to 100 | Length of river bends, measured in river widths. Higher values make longer, gentler bends. |
 | `MeanderAmplitude` (Meander amplitude) | 1.35 | 0 to 100 | Strength of river bends. Higher values make rivers wind more. |
 
@@ -36,7 +36,7 @@ A setting left at its default is not written, so Riverheim keeps its own value f
 | --- | --- | --- | --- |
 | `Budget` (Lake budget) | 0.0055 | 0 to 1 | Share of generation points picked as lake starting points, which then grow into lakes. Higher values make more lake area. |
 | `NoiseScale` (Lake noise scale) | 600 | 1 to 100000 | Size of the random pattern that decides where lakes prefer to form. Larger values group lakes into bigger regions. |
-| `LowlandContribution` (Lowland pull) | 0.35 | -100 to 100 | How strongly lakes prefer flat lowland. |
+| `LowlandContribution` (Lowland pull) | 0.35 | -100 to 100 | How strongly lakes prefer flat lowland. Above about 1 it makes no further difference; negative values push lakes away from lowland. |
 | `CuriosityContribution` (Terrain interest pull) | 0.8 | -100 to 100 | How strongly lakes prefer notable spots along river systems. |
 
 ## [4. Biomes] Biome placement bias
@@ -79,10 +79,10 @@ A setting left at its default is not written, so Riverheim keeps its own value f
 | `LandCohesion` (Land cohesion) | 0.4 | 0 to 100 | How strongly new land sticks to land already painted. Higher values gather the land into fewer, larger continents; lower values scatter it into more islands. AtlasBuilder's single-landmass Token preset uses 20. |
 | `LandDistanceWeighting` (Land distance weighting) | 0.5 | 0 to 100 | How much distance from already painted land counts when Riverheim decides where to paint more. Higher values keep landmasses more compact. |
 | `SwirlRays` (Swirl arms) | 8 | 0 to 32, whole number | Number of arms in the spiral pattern that keeps landmasses apart and gives Riverheim worlds their swirl. 0 turns the swirl off (AtlasBuilder's Mini preset does this). |
-| `SwirlExponent` (Swirl twist) | 1.4 | 0 to 10 | How quickly the swirl arms wind round as they go outwards. Higher values twist the arms more. |
-| `SwirlStartRadius` (Swirl start radius (m)) | 5800 | 0 to 100000 | Distance from the centre, in metres, where the swirl arms begin to shape the land. Smaller values bring the swirl closer to spawn. |
+| `SwirlExponent` (Swirl twist) | 1.4 | 0 to 10 | How quickly the swirl arms wind round as they go outwards. Higher values twist the arms more; 1 or less turns the swirl off, leaving land in large round masses. |
+| `SwirlStartRadius` (Swirl start radius (m)) | 5800 | 0 to 100000 | Distance from the centre, in metres, where the swirl arms begin to shape the land. Smaller values bring the swirl closer to spawn; beyond the world radius there is no swirl at all. |
 | `HarborRadius` (Harbor radius (m)) | 1700 | 0 to 100000 | Size of the sheltered water area Riverheim keeps near the centre of the world, in metres. 0 removes it (AtlasBuilder's Mini preset does this). |
-| `HarborCircularity` (Harbor circularity) | 0.045 | 0 to 10 | How round the central harbor area is kept. Higher values make it rounder. |
+| `HarborCircularity` (Harbor circularity) | 0.045 | 0 to 10 | How round the central harbor area is kept. Higher values make it rounder; 0 removes the harbor, like Harbor radius 0. |
 | `SmallIslandSizeThreshold` (Remove islands below (m)) | 0 | 0 to 100000 | Landmasses smaller than about this many metres across are removed after painting. 0 keeps every island; Riverheim's own Deep North region uses 220 to clear small ones. |
 | `CoastalTrimDistance` (Coastal trim distance (m)) | 85 | 0 to 10000 | How far the coastline is trimmed back from the painted land edge, in metres. Higher values make landmasses a bit smaller with more irregular coasts. |
 | `IslandMergeThreshold` (Island merge threshold) | 0.25 | 0 to 10 | How readily neighbouring land partitions merge into one landmass. Lower values merge more. |
@@ -91,8 +91,8 @@ A setting left at its default is not written, so Riverheim keeps its own value f
 
 | Setting | Default | Range | What it does |
 | --- | --- | --- | --- |
-| `MountainScoreThreshold` (Mountain biome threshold) | 0.85 | 0 to 10 | How well high ground must score as mountain terrain before it becomes the Mountain biome. Lower values turn more high ground into Mountain. |
-| `MountainCutdownRatio` (Mountain cut-down ratio) | 0.88 | 0 to 1 | Share of height taken off the mountain candidates Riverheim does not keep as mountains when it settles the terrain. Higher values flatten rejected mountains more; 0 leaves them standing. |
+| `MountainScoreThreshold` (Mountain biome threshold) | 0.85 | 0 to 10 | How well high ground must score as mountain terrain before it becomes the Mountain biome. Lower values turn more high ground into Mountain; above 1 nothing qualifies and the world has no Mountain biome. |
+| `MountainCutdownRatio` (Mountain cut-down ratio) | 0.88 | 0 to 1 | Share of height taken off the mountain candidates Riverheim does not keep as mountains when it settles the terrain. Higher values flatten rejected mountains more; values up to about 0.5 look the same as 0, which leaves them standing. |
 | `MountainMinPatchSize` (Mountain min patch size) | 180 | 0 to 100000 | Mountain patches smaller than this are culled after settling. Higher values leave only the big ranges. |
 | `MountainSelectionRandomness` (Mountain selection randomness) | 4 | 0 to 1000 | Randomness in which mountain candidates are chosen. 0 always picks the best-scoring ones; higher values pick more freely. |
 | `MountainAreaScore` (Mountain area score) | 0.02 | -10 to 10 | How much a mountain candidate's area counts in its score. Higher values favour bigger mountain regions. |
