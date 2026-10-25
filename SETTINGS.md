@@ -8,7 +8,7 @@ A setting left at its default is not written, so Riverheim keeps its own value f
 
 | Setting | Default | Range | What it does |
 | --- | --- | --- | --- |
-| `WorldRadius` (World radius (m)) | 10500 | 1000 to 100000 | Radius of the world Riverheim generates, in metres. Keep 10500 and use Expand World Size stretching for a bigger or smaller world: biome bands scale with this value, but the poles, the landmass swirl and the rainfall pattern do not, so changing it distorts the layout. The polar belts begin 8000 m from the centre by default (see Polar belt radius) and must stay well inside this radius, or Riverheim fails to generate the world. |
+| `WorldRadius` (World radius (m)) | 10500 | 1000 to 100000 | Radius of the world Riverheim generates, in metres. Keep 10500 and use Expand World Size stretching for a bigger or smaller world: biome bands scale with this value, but the Ashlands and Deep North (which always begin 8000 m from the centre, where the game itself puts them), the landmass swirl and the rainfall pattern do not, so changing it distorts the layout. |
 | `TileSpacing` (Tile spacing (m)) | 60 | 10 to 1000 | Distance between generation points in metres. Lower values add detail but take much longer, and river and lake counts grow with the number of points. |
 | `SeaFloorDepth` (Sea floor depth) | -40 | -1000 to 1000 | Height the sea floor settles to at the world edge and in the polar trenches, also used as the floor when shaping terrain. More negative values mean deeper edges and trenches. |
 | `OceanBiomeDepth` (Ocean biome depth) | -20 | -1000 to 1000 | Water must be deeper than this, and far enough from the coast, to count as the Ocean biome. More negative values mean fewer waters count as Ocean. |
@@ -135,13 +135,3 @@ A setting left at its default is not written, so Riverheim keeps its own value f
 | `ErosionRate` (Erosion rate) | 0.12 | 0 to 10 | Strength of the water erosion pass that settles the terrain. Higher values wear terrain down and smooth it more. |
 | `MeadowsShapingIntensity` (Meadows shaping intensity) | 0.75 | 0 to 100 | How strongly Meadows terrain is reshaped after biome placement. Higher values make Meadows terrain more distinct from its surroundings. |
 | `PlainsShapingIntensity` (Plains shaping intensity) | 0.5 | 0 to 100 | How strongly Plains terrain is reshaped after biome placement. Higher values make Plains terrain more distinct from its surroundings. |
-
-## [12. Poles] Poles (Ashlands and Deep North belts)
-
-| Setting | Default | Range | What it does |
-| --- | --- | --- | --- |
-| `PolarOffset` (Polar belt offset (m)) | 4000 | 0 to 100000 | Offset, in metres, of the circle each polar belt (Ashlands south, Deep North north) is cut from. The belts begin Polar belt radius minus this offset from the world centre, 8000 m by default, so larger values pull the poles inwards. Keep that distance at least 1000 m inside the world radius: a belt that only just reaches the world makes Riverheim fail to generate it. Moving it 1000 m or more beyond the world radius (0 with the default radius) removes both belts. |
-| `PolarRadius` (Polar belt radius (m)) | 12000 | 0 to 100000 | Radius, in metres, of the circle each polar belt is cut from. The belts begin Polar belt radius minus Polar belt offset from the world centre, 8000 m by default, so larger values push Ashlands and Deep North further out. Keep that distance at least 1000 m inside the world radius: a belt that only just reaches the world makes Riverheim fail to generate it, and 1000 m or more beyond the world radius removes both belts. AtlasBuilder's HugeWorld preset rescales both. |
-| `PolarNoiseAmplitude` (Polar edge waviness (m)) | 400 | 0 to 100000 | How far the polar belt boundary wanders from a clean circle, in metres. 0 gives a smooth boundary. |
-| `PolarGapWidth` (Polar gap width (m)) | 120 | 0 to 100000 | Width of the water gap kept between the main world's land and the polar belts, in metres. |
-| `PolarTrenchWidth` (Polar trench width (m)) | 220 | 0 to 100000 | Width of the deep trench along the polar belts, in metres, which drops to Sea floor depth. |

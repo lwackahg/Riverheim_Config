@@ -32,7 +32,6 @@ namespace RiverheimConfig
         public const string RiverFeatures = "9. River Features";
         public const string SubBiomes = "10. Sub-biomes";
         public const string Terrain = "11. Terrain";
-        public const string Poles = "12. Poles";
 
         public sealed class Section
         {
@@ -77,8 +76,7 @@ namespace RiverheimConfig
             new Section { Name = Mountains, Title = "Mountains" },
             new Section { Name = RiverFeatures, Title = "River features" },
             new Section { Name = SubBiomes, Title = "Sub-biomes" },
-            new Section { Name = Terrain, Title = "Terrain feel" },
-            new Section { Name = Poles, Title = "Poles (Ashlands and Deep North belts)" }
+            new Section { Name = Terrain, Title = "Terrain feel" }
         };
 
         private static Setting Number(string section, string key, string label, double value, double min, double max, double step, int decimals, string path, string description)
@@ -107,7 +105,7 @@ namespace RiverheimConfig
         public static readonly Setting[] All =
         {
             Number(World, "WorldRadius", "World radius (m)", 10500, 1000, 100000, 500, 0, "common.worldSize",
-                "Radius of the world Riverheim generates, in metres. Keep 10500 and use Expand World Size stretching for a bigger or smaller world: biome bands scale with this value, but the poles, the landmass swirl and the rainfall pattern do not, so changing it distorts the layout. The polar belts begin 8000 m from the centre by default (see Polar belt radius) and must stay well inside this radius, or Riverheim fails to generate the world."),
+                "Radius of the world Riverheim generates, in metres. Keep 10500 and use Expand World Size stretching for a bigger or smaller world: biome bands scale with this value, but the Ashlands and Deep North (which always begin 8000 m from the centre, where the game itself puts them), the landmass swirl and the rainfall pattern do not, so changing it distorts the layout."),
             Number(World, "TileSpacing", "Tile spacing (m)", 60, 10, 1000, 5, 0, "common.tileSpacing",
                 "Distance between generation points in metres. Lower values add detail but take much longer, and river and lake counts grow with the number of points."),
             Number(World, "SeaFloorDepth", "Sea floor depth", -40, -1000, 1000, 1, 1, "common.oceanDepth",
@@ -269,18 +267,7 @@ namespace RiverheimConfig
             Number(Terrain, "MeadowsShapingIntensity", "Meadows shaping intensity", 0.75, 0, 100, 0.25, 2, "world.biomes.postprocessing.main.meadowsShapingIntensity",
                 "How strongly Meadows terrain is reshaped after biome placement. Higher values make Meadows terrain more distinct from its surroundings."),
             Number(Terrain, "PlainsShapingIntensity", "Plains shaping intensity", 0.5, 0, 100, 0.25, 2, "world.biomes.postprocessing.main.plainsShapingIntensity",
-                "How strongly Plains terrain is reshaped after biome placement. Higher values make Plains terrain more distinct from its surroundings."),
-
-            Number(Poles, "PolarOffset", "Polar belt offset (m)", 4000, 0, 100000, 100, 0, "world.polar.offset",
-                "Offset, in metres, of the circle each polar belt (Ashlands south, Deep North north) is cut from. The belts begin Polar belt radius minus this offset from the world centre, 8000 m by default, so larger values pull the poles inwards. Keep that distance at least 1000 m inside the world radius: a belt that only just reaches the world makes Riverheim fail to generate it. Moving it 1000 m or more beyond the world radius (0 with the default radius) removes both belts."),
-            Number(Poles, "PolarRadius", "Polar belt radius (m)", 12000, 0, 100000, 100, 0, "world.polar.radius",
-                "Radius, in metres, of the circle each polar belt is cut from. The belts begin Polar belt radius minus Polar belt offset from the world centre, 8000 m by default, so larger values push Ashlands and Deep North further out. Keep that distance at least 1000 m inside the world radius: a belt that only just reaches the world makes Riverheim fail to generate it, and 1000 m or more beyond the world radius removes both belts. AtlasBuilder's HugeWorld preset rescales both."),
-            Number(Poles, "PolarNoiseAmplitude", "Polar edge waviness (m)", 400, 0, 100000, 50, 0, "world.polar.noiseAmplitude",
-                "How far the polar belt boundary wanders from a clean circle, in metres. 0 gives a smooth boundary."),
-            Number(Poles, "PolarGapWidth", "Polar gap width (m)", 120, 0, 100000, 10, 0, "world.landmass.restrictions.main.polarGapWidth",
-                "Width of the water gap kept between the main world's land and the polar belts, in metres."),
-            Number(Poles, "PolarTrenchWidth", "Polar trench width (m)", 220, 0, 100000, 10, 0, "world.height.settlement.main.polarTrenchWidth",
-                "Width of the deep trench along the polar belts, in metres, which drops to Sea floor depth.")
+                "How strongly Plains terrain is reshaped after biome placement. Higher values make Plains terrain more distinct from its surroundings.")
         };
 
         public static Setting Find(string section, string key)

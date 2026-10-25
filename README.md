@@ -2,7 +2,7 @@
 
 Server-synchronized world-generation controls for **Gurebu-Riverheim 1.2.x**.
 
-Riverheim itself has no player-facing options. This companion mod adds a config file for the parts of Riverheim's world generation that are safe to turn: world size and depths, rivers, lakes, biome placement and amounts, biome bands, landmass shape, mountains, river features, sub-biomes, terrain feel and the polar belts. Settings are applied at Riverheim's `ConfigManager.GetConfig` entry point, immediately before a world is generated.
+Riverheim itself has no player-facing options. This companion mod adds a config file for the parts of Riverheim's world generation that are safe to turn: world size and depths, rivers, lakes, biome placement and amounts, biome bands, landmass shape, mountains, river features, sub-biomes and terrain feel. Settings are applied at Riverheim's `ConfigManager.GetConfig` entry point, immediately before a world is generated.
 
 **Preview before you commit:** every setting here is the same setting, with the same name and default, as in the [Riverheim AtlasBuilder UI](https://github.com/lwackahg/atlasbuilder-ui-repo), a launcher for Gurebu's [Riverheim AtlasBuilder](https://thunderstore.io/c/valheim/p/Gurebu/Riverheim_AtlasBuilder/). Draw maps of your seed with your settings, then **Export config** writes the config file for your server.
 
@@ -21,7 +21,6 @@ Every default is Riverheim 1.2.1's own value, and **a setting left at its defaul
 - **9. River Features**: channels through landmasses, the rainfall pattern that feeds rivers, how notable river sources, confluences and bends are
 - **10. Sub-biomes**: Mistglade rate and patch size, marsh and swamp base height, lowland Black Forest shaping
 - **11. Terrain**: cliffs, terracing, flatland amount, land slope, erosion, Meadows and Plains shaping
-- **12. Poles**: where the Ashlands and Deep North belts sit, their edge waviness, the gap and trench along them
 
 Every setting is enforced and synchronized by the server through ServerSync.
 
@@ -43,7 +42,7 @@ Every setting is enforced and synchronized by the server through ServerSync.
 - Config files from Riverheim Config 2.0.0 keep working; the new sections are added with their defaults. `ForestWeight`'s default moved from 261 to 258.5 because Riverheim 1.1.1 gave 2.5 of it to the new lowland Black Forest variant; a 2.0.0 file that still says 261 will now force 261.
 - AtlasBuilder 1.0.0 bundles a Riverheim from before 1.1.1. The AtlasBuilder UI's **Installed** Riverheim choice draws with your own Riverheim instead, so its previews match the game, including the lowland Black Forest settings (`ForestLowlandsWeight`, `ForestLowlandsShaping*`); with its **Bundled** choice those settings do nothing.
 - This mod only exposes settings that map to real Riverheim 1.2 configuration fields, and each one was checked to visibly change a map of a test seed drawn by Riverheim 1.2.1 itself (run inside AtlasBuilder). Descriptions say what the field does as far as it is understood; the AtlasBuilder UI is the way to see what a value does to your seed.
-- Two things make Riverheim throw an error instead of generating a world, which the mod cannot prevent for you: `RainfallMinimum` at exactly 0 (the lowest allowed value is now 0.001), and polar belts that only just reach into the world (`PolarRadius - PolarOffset` within about 1000 m of `WorldRadius`; the default is 8000 m against 10500 m). The descriptions say so. What the game shows when that happens was not tested; AtlasBuilder aborts.
+- `RainfallMinimum` at exactly 0 makes Riverheim throw an error instead of generating a world, so the lowest allowed value is 0.001. The descriptions say so. What the game shows when that happens was not tested; AtlasBuilder aborts.
 
 ## Troubleshooting
 
