@@ -16,7 +16,7 @@
 - The settings table (`RiverheimSettings.cs`) is shared verbatim with the Riverheim AtlasBuilder UI launcher, which compiles it into its AtlasBuilder hook and builds its fields from the exported `settings.json`. Mod and launcher can no longer drift apart.
 - New `tests/`: a DLL check that every path resolves and every default equals Riverheim's own value, and an AtlasBuilder harness that runs the installed Riverheim 1.2.1 inside AtlasBuilder and proves that stock values render byte-identical to `--preset Default`, that each of the 82 settings visibly changes the map, and that `presets/BEST.cfg` still renders as before.
 - Settings for the lowland Black Forest variant are skipped with a warning on Riverheim builds that lack the field (including the Riverheim bundled in AtlasBuilder 1.0.0, so the AtlasBuilder UI's previews ignore them for now).
-- Two values make Riverheim throw instead of generating a world: `RainfallMinimum` at exactly 0 (its minimum is now 0.001). The descriptions warn about both.
+- Two values make Riverheim throw instead of generating a world, and the mod now refuses both: `RainfallMinimum` at exactly 0 (its minimum is now 0.001) and a `WorldRadius` from 7800 to 9000 m, where the world edge runs into the polar belts (Riverheim's own radius is kept and the log says why). The descriptions warn about both.
 
 ### Migration
 

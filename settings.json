@@ -27,7 +27,7 @@
       "path": "common.worldSize",
       "optional": false,
       "previewNote": null,
-      "description": "Radius of the world Riverheim generates, in metres. Keep 10500 and use Expand World Size stretching for a bigger or smaller world: biome bands scale with this value, but the Ashlands and Deep North (which always begin 8000 m from the centre, where the game itself puts them), the landmass swirl and the rainfall pattern do not, so changing it distorts the layout."
+      "description": "Radius of the world Riverheim generates, in metres. Keep 10500 and use Expand World Size stretching for a bigger or smaller world: biome bands scale with this value, but the Ashlands and Deep North (which always begin 8000 m from the centre, where the game itself puts them), the landmass swirl and the rainfall pattern do not, so changing it distorts the layout. Values from 7800 to 9000 are refused and Riverheim's own radius is kept: there the world edge runs into the Ashlands and Deep North belts and Riverheim cannot generate the world."
     },
     {
       "section": "1. World",

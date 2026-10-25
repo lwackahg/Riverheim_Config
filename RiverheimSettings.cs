@@ -98,6 +98,13 @@ namespace RiverheimConfig
         }
 
         private const string Affinity = "world.biomes.affinity.main.";
+
+        // World radii Riverheim cannot generate: the world edge runs into the polar belts, which begin 8000 m from the
+        // centre with a wavy edge, and terrain settling fails ("Heap is empty"). Found by rendering seeds 400, 1337 and 77
+        // with Riverheim 1.2.1: 7750 and 8750 work on all, 8000 to 8600 fail on at least one. The margin covers other seeds.
+        private const int UnsafeRadiusMin = 7800;
+        private const int UnsafeRadiusMax = 9000;
+
         private const string Placement = "world.biomes.competitivePlacement.main.biomes.";
 
         // Defaults are Riverheim 1.2.1's own values (DefaultConfig plus the default preset's version-2 overrides).
@@ -105,7 +112,7 @@ namespace RiverheimConfig
         public static readonly Setting[] All =
         {
             Number(World, "WorldRadius", "World radius (m)", 10500, 1000, 100000, 500, 0, "common.worldSize",
-                "Radius of the world Riverheim generates, in metres. Keep 10500 and use Expand World Size stretching for a bigger or smaller world: biome bands scale with this value, but the Ashlands and Deep North (which always begin 8000 m from the centre, where the game itself puts them), the landmass swirl and the rainfall pattern do not, so changing it distorts the layout."),
+                "Radius of the world Riverheim generates, in metres. Keep 10500 and use Expand World Size stretching for a bigger or smaller world: biome bands scale with this value, but the Ashlands and Deep North (which always begin 8000 m from the centre, where the game itself puts them), the landmass swirl and the rainfall pattern do not, so changing it distorts the layout. Values from 7800 to 9000 are refused and Riverheim's own radius is kept: there the world edge runs into the Ashlands and Deep North belts and Riverheim cannot generate the world."),
             Number(World, "TileSpacing", "Tile spacing (m)", 60, 10, 1000, 5, 0, "common.tileSpacing",
                 "Distance between generation points in metres. Lower values add detail but take much longer, and river and lake counts grow with the number of points."),
             Number(World, "SeaFloorDepth", "Sea floor depth", -40, -1000, 1000, 1, 1, "common.oceanDepth",
@@ -339,6 +346,12 @@ namespace RiverheimConfig
                 if (setting.Optional && !Exists(config, setting.Path))
                 {
                     skipped.Add(setting.Key);
+                    continue;
+                }
+                if (setting.Key == "WorldRadius" && value >= UnsafeRadiusMin && value <= UnsafeRadiusMax)
+                {
+                    failed.Add("WorldRadius " + value.ToString(CultureInfo.InvariantCulture) + " (between " + UnsafeRadiusMin + " and " + UnsafeRadiusMax +
+                        " m the world edge runs into the Ashlands and Deep North belts and Riverheim cannot generate the world; Riverheim's own radius was kept)");
                     continue;
                 }
                 Assign(config, setting.Path, failed, delegate(Type fieldType) { return ConvertValue(value, fieldType); });
