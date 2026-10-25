@@ -1,6 +1,6 @@
 # Riverheim Config - Changelog
 
-## [3.0.0] - unreleased
+## [3.0.0] - 2026-10-24
 
 ### For Gurebu-Riverheim 1.2.x, with many more controls
 
